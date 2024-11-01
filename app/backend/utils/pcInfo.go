@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"encoding/json"
@@ -8,7 +8,6 @@ import (
 	"runtime"
 )
 
-// Modelo para representar la información de la PC
 type PCInfo struct {
 	PCName       string `json:"pc_name"`
 	UserName     string `json:"user_name"`
@@ -54,7 +53,8 @@ func getSerialNumber() (string, error) {
 }
 
 // Funcion para capturar la info de la PC
-func capturePCInfo(w http.ResponseWriter, r *http.Request) {
+func CapturePCInfo(w http.ResponseWriter, r *http.Request) {
+
 	if r.Method != http.MethodGet {
 		http.Error(w, "Metodo no permitido", http.StatusMethodNotAllowed)
 		return
@@ -84,21 +84,10 @@ func capturePCInfo(w http.ResponseWriter, r *http.Request) {
 
 	pcInfo.SerialNumber = serialNumber
 
+	w.Write([]byte("PC info captured"))
+
 	//Enviar respuesta en JSON de pcInfo
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(pcInfo)
 
-}
-
-func main() {
-
-	// Endpoint para llamar a la funcion capturePCInfo
-	http.HandleFunc("/pc/info", capturePCInfo)
-
-	port := "8080"
-	println("Servidor escuchando en el puerto", port)
-	if err := http.ListenAndServe(":"+port, nil); err != nil {
-		println("Error al iniciar el servidor:", err)
-		os.Exit(1)
-	}
 }
