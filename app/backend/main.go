@@ -10,7 +10,7 @@ func main() {
 
 	app := fiber.New()
 
-	database.ConnectDB("root:1234@tcp(172.24.3.229:3308/inventario")
+	database.ConnectDB("")
 
 	// Endpoint para llamar a la funcion capturePCInfo
 	app.Get("/pcinfo", utils.CapturePCInfo)
