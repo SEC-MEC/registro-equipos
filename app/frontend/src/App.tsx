@@ -1,13 +1,47 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import { useAuthStore } from "./context/store";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/ReactToastify.css';
+import ProtectedRoute from "./components/ProtectedRoute";
 
 
-function App() {
+
+
+const AppContent = () => {
+
+
+  const isAuth = useAuthStore((state) => state.isAuth);
+
 
 
   return (
+    <Routes>
+
+      <Route path="/" element={<Home />} />
+
+      <Route element={<ProtectedRoute isAllowed={isAuth} />}>
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/registro" element={<RegistroPage />} />
+      </Route>
+
+    </Routes>
+  );
+};
+
+function App() {
+  return (
     <>
-      <h1 className="text-zinc-800 text-center text-3xl font-bold">App</h1>
+      <BrowserRouter basename="/rdt">
+        <AppContent />
+        <ToastContainer 
+          position="top-right"
+          pauseOnHover={false}
+          pauseOnFocusLoss={false}
+        />
+      </BrowserRouter>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
