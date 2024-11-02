@@ -8,6 +8,7 @@ import (
 	"github.com/SEC-MEC/registro-equipos.git/database"
 	"github.com/SEC-MEC/registro-equipos.git/utils"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/joho/godotenv"
 )
 
@@ -21,6 +22,18 @@ func main() {
 	} else {
 		log.Println("=>Variables de entorno cargadas correctamente")
 	}
+
+	urlOrigin := os.Getenv("URL_FRONTEND")
+
+	corsOptions := cors.New(cors.Config{
+		AllowOrigins:     urlOrigin,
+		AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS",
+		AllowHeaders:     "Content-Type, Authorization",
+		AllowCredentials: true,
+	})
+
+	app.Use(corsOptions)
+
 	database.ConnectDB()
 
 	// Endpoint para llamar a la funcion capturePCInfo
