@@ -1,11 +1,11 @@
 package utils
 
 import (
-	"encoding/json"
-	"net/http"
 	"os"
 	"os/exec"
 	"runtime"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 type PCInfo struct {
@@ -53,41 +53,26 @@ func getSerialNumber() (string, error) {
 }
 
 // Funcion para capturar la info de la PC
-func CapturePCInfo(w http.ResponseWriter, r *http.Request) {
-
-	if r.Method != http.MethodGet {
-		http.Error(w, "Metodo no permitido", http.StatusMethodNotAllowed)
-		return
-	}
-
+func CapturePCInfo(c *fiber.Ctx) error {
 	pcInfo := PCInfo{}
 
 	pcName, err := getPCName()
 	if err != nil {
-		http.Error(w, "Error al obtener el nombre de la PC", http.StatusInternalServerError)
-		return
+		return c.Status(fiber.StatusInternalServerError).SendString("Error al obtener el nombre de la PC")
 	}
 	pcInfo.PCName = pcName
 
 	userName, err := getUserName()
 	if err != nil {
-		http.Error(w, "Error al obtener el nombre del usuario", http.StatusInternalServerError)
-		return
+		return c.Status(fiber.StatusInternalServerError).SendString("Error al obtener el nombre del usuario")
 	}
 	pcInfo.UserName = userName
 
 	serialNumber, err := getSerialNumber()
 	if err != nil {
-		http.Error(w, "Error al obtener le numero de serie", http.StatusInternalServerError)
-		return
+		return c.Status(fiber.StatusInternalServerError).SendString("Error al obtener el numero de serie")
 	}
-
 	pcInfo.SerialNumber = serialNumber
 
-	w.Write([]byte("PC info captured"))
-
-	//Enviar respuesta en JSON de pcInfo
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(pcInfo)
-
+	return c.JSON(pcInfo)
 }
