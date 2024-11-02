@@ -25,7 +25,15 @@ func main() {
 
 	// Endpoint para llamar a la funcion capturePCInfo
 	app.Get("/pcinfo", utils.CapturePCInfo)
-	app.Post("/users", controllers.CreateUser)
+
+	// User endpoints
+	app.Post("/user", controllers.CreateUser)
+	app.Post("/login", controllers.LoginHandler)
+	app.Get("/auth", controllers.ProtectedHandler)
+
+	//Equipo endpoints
+	app.Post("/equipo", controllers.CreateEquipo)
+	app.Get("/equipos", controllers.GetEquipos)
 
 	defer database.CloseDB()
 
