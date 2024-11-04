@@ -5,7 +5,7 @@ import clienteAxios from "../config/axios";
 
 export const registerRequest = async (user: any) => {
     try {
-        const res = await clienteAxios.post('/register', user)
+        const res = await clienteAxios.post('/user', user)
         return res
     } catch (error) {
         console.log("Error en el registro: ", error)
@@ -13,9 +13,9 @@ export const registerRequest = async (user: any) => {
 }
 
 
-export const loginRequest = async (user: any) => {  
+export const loginRequest = async (userData: {usuario: string, pass:string}) => {  
     try {
-        const res = await clienteAxios.post('/login', user)
+        const res = await clienteAxios.post('/login', userData)
         return res
     } catch (error) {
         console.log("Error en el login: ", error)

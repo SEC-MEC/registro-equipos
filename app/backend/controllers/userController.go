@@ -112,7 +112,7 @@ func ProtectedHandler(c *fiber.Ctx) error {
 	}
 
 	// Extraer los datos del token
-	username, ok1 := claims["username"].(string)
+	usuario, ok1 := claims["usuario"].(string)
 	nombre, ok2 := claims["nombre"].(string)
 	apellido, ok3 := claims["apellido"].(string)
 	es_admin, ok4 := claims["es_admin"].(bool)
@@ -125,7 +125,7 @@ func ProtectedHandler(c *fiber.Ctx) error {
 	// Crear el mapa de respuesta con los datos obtenidos
 	responseData := fiber.Map{
 		"id":       userID,
-		"username": username,
+		"usuario":  usuario,
 		"nombre":   nombre,
 		"apellido": apellido,
 		"es_admin": es_admin,

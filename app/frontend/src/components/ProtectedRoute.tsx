@@ -1,9 +1,13 @@
+import { Navigate, Outlet } from "react-router-dom";
 
-
-const ProtectedRoute = () => {
-  return (
-    <div>ProtectedRoute</div>
-  )
+interface Props {
+    isAllowed: boolean;
+    children?: React.ReactNode;
 }
 
-export default ProtectedRoute
+
+export const ProtectedRoute: React.FC<Props> = ({isAllowed, children}: Props) => {
+    if(!isAllowed)  return <Navigate to="/" />
+
+    return children ? <>{children}</> : <Outlet/>
+}
