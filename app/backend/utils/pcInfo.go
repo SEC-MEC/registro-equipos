@@ -75,4 +75,5 @@ func CapturePCInfo(c *fiber.Ctx) error {
 	pcInfo.SerialNumber = serialNumber
 
 	return c.JSON(pcInfo)
+
 }
