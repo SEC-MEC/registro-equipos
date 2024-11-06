@@ -15,11 +15,6 @@ func CreateEquipo(c *fiber.Ctx) error {
 
 	if err := c.BodyParser(equipo); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "No se pudieron leer los datos"})
-
-	}
-
-	if equipo.Nro_serie == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Nombre de PC y Numero de serie obligatorios"})
 	}
 
 	// Validar si ya existe el equipo con ese nombre
@@ -37,7 +32,7 @@ func CreateEquipo(c *fiber.Ctx) error {
 	}
 
 	//Insert en la base de datos
-	query := "INSERT INTO equipo (nombre, nro_serie, id_oficina, id_inventario, tipo, observaciones, dominio) VALUES (?, ?, ?, ?, ?, ?, ?)"
+	query := "INSERT INTO Into (nombre, nro_serie, id_oficina, id_inventario, tipo, observaciones, dominio) VALUES (?, ?, ?, ?, ?, ?, ?)"
 	result, err := database.DB.Exec(query, equipo.Nombre, equipo.Nro_serie, equipo.Id_oficina, equipo.Id_inventario, equipo.Tipo, equipo.Observaciones, equipo.Dominio)
 
 	if err != nil {
@@ -58,6 +53,7 @@ func CreateEquipo(c *fiber.Ctx) error {
 
 }
 
+// campo sql null si esta vacio
 func nilIfEmpty(s sql.NullString) *string {
 	if s.Valid {
 		return &s.String
@@ -65,17 +61,9 @@ func nilIfEmpty(s sql.NullString) *string {
 	return nil
 }
 
-func nilIfEmptyInt(i sql.NullInt32) *int {
-	if i.Valid {
-		id := int(i.Int32)
-		return &id
-	}
-	return nil
-}
-
 func GetEquipos(c *fiber.Ctx) error {
 
-	query := "SELECT id, nombre, nro_serie, id_oficina, id_inventario, tipo, observaciones, dominio FROM equipo"
+	query := "SELECT * FROM vista;"
 	rows, err := database.DB.Query(query)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Error al obtener los equipos"})
@@ -86,15 +74,23 @@ func GetEquipos(c *fiber.Ctx) error {
 
 	for rows.Next() {
 		equipo := models.Equipo{}
-		var nombre, idInventario, observaciones sql.NullString
-		var idOficina sql.NullInt32
-		err := rows.Scan(&equipo.Id, &nombre, &equipo.Nro_serie, &idOficina, &idInventario, &equipo.Tipo, &observaciones, &equipo.Dominio)
+		var nombre_pc, nro_serie, idInventario, observaciones, oficina sql.NullString
+		var piso sql.NullInt64
+
+		err := rows.Scan(&equipo.Id_equipo, &nombre_pc, &nro_serie, &idInventario, &equipo.Tipo, &oficina, &piso, &observaciones, &equipo.Dominio)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Error al escanear los equipos"})
 		}
 
-		equipo.Nombre = nilIfEmpty(nombre)
-		equipo.Id_oficina = nilIfEmptyInt(idOficina)
+		equipo.Nombre = nilIfEmpty(nombre_pc)
+		equipo.Nro_serie = nilIfEmpty(nro_serie)
+		equipo.Oficina = nilIfEmpty(oficina)
+		if piso.Valid {
+			p := int(piso.Int64)
+			equipo.Piso = &p
+		} else {
+			equipo.Piso = nil
+		}
 		equipo.Id_inventario = nilIfEmpty(idInventario)
 		equipo.Observaciones = nilIfEmpty(observaciones)
 
