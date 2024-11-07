@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search } from 'lucide-react'
 import { getEquipos } from '@/api/equipos'
 import { useQuery } from '@tanstack/react-query'
+import { Link } from 'react-router-dom'
 
 interface Ue {
   id: number;
@@ -49,7 +50,7 @@ export default function Component() {
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value)
-    setCurrentPage(1) // Reset to first page on new search
+    setCurrentPage(1) 
   }
 
   if (isLoading) return <div className="flex justify-center items-center h-screen">Cargando...</div>
@@ -77,8 +78,12 @@ export default function Component() {
 
   return (
     <div className="p-4 md:p-8 bg-zinc-100 min-h-screen">
-      <div className="max-w-7xl mx-auto space-y-8">
-        <h1 className="text-3xl font-bold text-zinc-800">Inventario de Equipos</h1>
+      <div className="max-w-7xl mx-auto space-y-8 ">
+        <aside className='flex justify-between items-center'>
+           <h1 className="text-3xl font-bold text-zinc-800">Inventario de Equipos</h1>
+        <Link to='/registro' className='px-3 py-1 rounded-sm w-64 text-center bg-zinc-800 text-white font-semibold hover:bg-zinc-700'>Registrar nuevo equipo</Link>
+        </aside>
+       
         <div className="relative">
           <Input
             type="text"

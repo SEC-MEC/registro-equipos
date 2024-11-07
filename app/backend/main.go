@@ -48,6 +48,9 @@ func main() {
 	app.Post("/equipo", controllers.CreateEquipo)
 	app.Get("/equipos", controllers.GetEquipos)
 
+	//Oficina endpoints
+	app.Get("/oficinas", controllers.GetOficinas)
+
 	defer database.CloseDB()
 
 	port := os.Getenv("PORT")

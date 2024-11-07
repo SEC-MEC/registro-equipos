@@ -6,7 +6,7 @@ const Home = () => {
 
   return (
 
-      <div className="z-10 w-full">
+      <div className="z-10 w-full bg-zinc-800 min-h-screen">
        <motion.div
           initial={{opacity:0, y: -100}}
           animate={{opacity:1, y:0}}
@@ -21,7 +21,10 @@ const Home = () => {
       transition={{duration:1}}
       className="relative z-20"
       >
-<LoginForm/>
+        <div className="py-24">
+          <LoginForm/>
+        </div>
+
 
       </motion.div>
       

@@ -20,7 +20,7 @@ const AppContent = () => {
       <Route path="/" element={<Home />} />
       <Route element={<ProtectedRoute isAllowed={isAuth} />}>
       <Route path="/auth" element={<Dashboard />} />
-            <Route path="/registro" element={<RegisterPage />} />
+      <Route path="/registro" element={<RegisterPage />} />
       </Route>
 
     </Routes>

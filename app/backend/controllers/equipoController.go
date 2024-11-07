@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/SEC-MEC/registro-equipos.git/database"
 	"github.com/SEC-MEC/registro-equipos.git/models"
@@ -31,20 +32,35 @@ func CreateEquipo(c *fiber.Ctx) error {
 		}
 	}()
 
-	existNombrePc := validation.ValidateEquipo(*equipo.Nombre)
-	if existNombrePc != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Ya existe un equipo con ese nombre"})
+	// existNombrePc := validation.ValidateEquipo(*equipo.Nombre)
+	// if existNombrePc != nil {
+	// 	return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Ya existe un equipo con ese nombre"})
+	// }
+
+	// // Validar si ya existe el equipo con ese numero de serie
+	// existNroSerie := validation.ValidateEquipoNroSerie(*equipo.Nro_serie)
+	// if existNroSerie != nil {
+	// 	return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Ya existe un equipo con este numero de serie"})
+	// }
+
+	nombreBase := equipo.Nombre
+	sufijo := 0
+	nombreUnico := fmt.Sprintf("%s-%03d", *nombreBase, sufijo)
+
+	for {
+		existNombrePc := validation.ValidateEquipo(nombreUnico)
+		if existNombrePc == nil {
+			break
+		}
+		sufijo++
+		nombreUnico = fmt.Sprintf("%s-%03d", *nombreBase, sufijo)
 	}
 
-	// Validar si ya existe el equipo con ese numero de serie
-	existNroSerie := validation.ValidateEquipoNroSerie(*equipo.Nro_serie)
-	if existNroSerie != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Ya existe un equipo con este numero de serie"})
-	}
+	equipo.Nombre = &nombreUnico
 
 	//Insert en la base de datos
 	query := "INSERT INTO equipo (nombre, nro_serie, id_oficina, id_inventario, tipo, observaciones, dominio) VALUES (?, ?, ?, ?, ?, ?, ?)"
-	result, err := tx.Exec(query, equipo.Nombre, equipo.Nro_serie, equipo.Id_oficina, equipo.Id_inventario, equipo.Tipo, equipo.Observaciones, equipo.Dominio)
+	result, err := tx.Exec(query, nombreUnico, equipo.Nro_serie, equipo.Id_oficina, equipo.Id_inventario, equipo.Tipo, equipo.Observaciones, equipo.Dominio)
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Error al insertar el equipo"})
@@ -104,7 +120,8 @@ func GetEquipos(c *fiber.Ctx) error {
         ofi.id AS oficina_id, ofi.nombre AS oficina_nombre, ofi.piso AS oficina_piso,
         ue.id AS ue_id, ue.nombre AS ue_nombre,
         u.id AS usuario_id, u.nombre AS usuario_nombre, u.apellido AS usuario_apellido, u.usr AS usuario_usr,
-        app.id AS app_id, app.nombre AS app_nombre, app.version AS app_version
+        app.id AS app_id, app.nombre AS app_nombre, app.version AS app_version,
+		m.fecha
     FROM equipo eq
     LEFT JOIN oficina ofi ON eq.id_oficina = ofi.id
     LEFT JOIN ue ON ofi.id_ue = ue.id
@@ -112,6 +129,7 @@ func GetEquipos(c *fiber.Ctx) error {
     LEFT JOIN usuario u ON eu.id_usuario = u.id
     LEFT JOIN equipo_app ea ON eq.id = ea.id_equipo
     LEFT JOIN aplicacion app ON ea.id_app = app.id
+	LEFT JOIN modificado m ON eq.id = m.id_equipo
 `
 
 	rows, err := database.DB.Query(query)
@@ -124,9 +142,9 @@ func GetEquipos(c *fiber.Ctx) error {
 
 	for rows.Next() {
 		var (
-			equipoID, oficinaID, ueID, usuarioID, appID         sql.NullInt64
-			nombre, nroSerie, idInventario, tipo, observaciones sql.NullString
-			dominio                                             sql.NullBool
+			equipoID, oficinaID, ueID, usuarioID, appID                sql.NullInt64
+			nombre, nroSerie, idInventario, tipo, observaciones, fecha sql.NullString
+			dominio                                                    sql.NullBool
 
 			oficinaNombre, ueNombre, usuarioNombre, usuarioApellido, usuarioUsr, appNombre, appVersion sql.NullString
 			oficinaPiso                                                                                sql.NullInt64
@@ -137,7 +155,7 @@ func GetEquipos(c *fiber.Ctx) error {
 			&oficinaID, &oficinaNombre, &oficinaPiso,
 			&ueID, &ueNombre,
 			&usuarioID, &usuarioNombre, &usuarioApellido, &usuarioUsr,
-			&appID, &appNombre, &appVersion,
+			&appID, &appNombre, &appVersion, &fecha,
 		)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Error al escanear los datos", "details": err.Error()})
