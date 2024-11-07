@@ -5,6 +5,7 @@ import { ToastContainer } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 import {ProtectedRoute} from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
+import RegisterPage from "./pages/RegisterPage";
 
 
 
@@ -19,6 +20,7 @@ const AppContent = () => {
       <Route path="/" element={<Home />} />
       <Route element={<ProtectedRoute isAllowed={isAuth} />}>
       <Route path="/auth" element={<Dashboard />} />
+            <Route path="/registro" element={<RegisterPage />} />
       </Route>
 
     </Routes>

@@ -10,17 +10,31 @@ import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search } from '
 import { getEquipos } from '@/api/equipos'
 import { useQuery } from '@tanstack/react-query'
 
+interface Ue {
+  id: number;
+  nombre: string;
+}
+
+interface Oficina {
+  id: number;
+  nombre: string;
+  piso: number;
+  ue: Ue;
+}
+
 interface Item {
-    id_equipo: number;
-    nombre_pc: string;
-    nro_serie: string;
-    tipo: string;
-    piso: string;
-    id_oficina: number;
-    oficina: string;
-    id_inventario: number;
-    observaciones: string;
-    dominio: boolean;
+  id_equipo: number;
+  nombre: string;
+  id_oficina: number | null;
+  id_apps: number | null;
+  id_tecnico: number | null;
+  nro_serie: string;
+  id_usuario: number | null;
+  id_inventario: string;
+  tipo: string;
+  observaciones: string;
+  dominio: boolean;
+  oficina: Oficina;
 }
 
 export default function Component() {
@@ -41,9 +55,14 @@ export default function Component() {
   if (isLoading) return <div className="flex justify-center items-center h-screen">Cargando...</div>
   if (isError) return <div className="flex justify-center items-center h-screen text-red-500">Error al cargar los datos.</div>
 
+  // const largoDATA = data?.length
+  // console.log("todos los items: ", largoDATA)
+
   const filteredData = data?.filter(item =>
     Object.values(item).some(value =>
-      value && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+      value && typeof value === 'object'
+        ? Object.values(value).some(v => v && v.toString().toLowerCase().includes(searchTerm.toLowerCase()))
+        : value && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
     )
   ) || []
 
@@ -80,6 +99,7 @@ export default function Component() {
                   <TableHead className="bg-zinc-50 text-zinc-600">Tipo</TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">Piso</TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">Oficina</TableHead>
+                  <TableHead className="bg-zinc-50 text-zinc-600">UE</TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">ID Inventario</TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">Observaciones</TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">Dominio</TableHead>
@@ -96,11 +116,12 @@ export default function Component() {
                       transition={{ duration: 0.2 }}
                       className="hover:bg-zinc-50 transition-colors"
                     >
-                      <TableCell className="font-medium">{item.nombre_pc}</TableCell>
+                      <TableCell className="font-medium">{item.nombre}</TableCell>
                       <TableCell>{item.nro_serie}</TableCell>
                       <TableCell>{item.tipo}</TableCell>
-                      <TableCell>{item.piso}</TableCell>
-                      <TableCell>{item.oficina}</TableCell>
+                      <TableCell>{item.oficina?.piso}</TableCell>
+                      <TableCell>{item.oficina?.nombre}</TableCell>
+                      <TableCell>{item.oficina?.ue.nombre}</TableCell>
                       <TableCell>{item.id_inventario}</TableCell>
                       <TableCell>{item.observaciones}</TableCell>
                       <TableCell>{item.dominio ? 'Sí' : 'No'}</TableCell>
@@ -131,7 +152,7 @@ export default function Component() {
             </Button>
             <Select
               value={currentPage.toString()}
-              onValueChange={(value: any) => goToPage(parseInt(value))}
+              onValueChange={(value) => goToPage(parseInt(value))}
             >
               <SelectTrigger className="w-[100px]">
                 <SelectValue placeholder="Página" />
@@ -165,7 +186,7 @@ export default function Component() {
             <span className="text-sm text-zinc-600">Elementos por página:</span>
             <Select
               value={itemsPerPage.toString()}
-              onValueChange={(value:any) => {
+              onValueChange={(value) => {
                 setItemsPerPage(parseInt(value))
                 setCurrentPage(1)
               }}
