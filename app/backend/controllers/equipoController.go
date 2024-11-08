@@ -60,7 +60,7 @@ func CreateEquipo(c *fiber.Ctx) error {
 
 	//Insert en la base de datos
 	query := "INSERT INTO equipo (nombre, nro_serie, id_oficina, id_inventario, tipo, observaciones, dominio) VALUES (?, ?, ?, ?, ?, ?, ?)"
-	result, err := tx.Exec(query, nombreUnico, equipo.Nro_serie, equipo.Id_oficina, equipo.Id_inventario, equipo.Tipo, equipo.Observaciones, equipo.Dominio)
+	result, err := tx.Exec(query, equipo.Nombre, equipo.Nro_serie, equipo.Id_oficina, equipo.Id_inventario, equipo.Tipo, equipo.Observaciones, equipo.Dominio)
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Error al insertar el equipo"})

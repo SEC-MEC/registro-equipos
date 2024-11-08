@@ -37,7 +37,7 @@ func main() {
 	database.ConnectDB()
 
 	// Endpoint para llamar a la funcion capturePCInfo
-	app.Get("/pcinfo", utils.CapturePCInfo)
+	app.Post("/pcinfo", utils.CapturePCInfo)
 
 	// User endpoints
 	app.Post("/user", controllers.CreateUser)

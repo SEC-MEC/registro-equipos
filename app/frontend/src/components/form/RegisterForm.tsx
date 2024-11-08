@@ -59,27 +59,27 @@ const onSubmit = (data: any) => {
   try {
    const unidad = data.unidad || 'Desconocida';  
     const oficina = data.oficina.trim() || 'SinOficina'; 
-    const unidadNombre = data.unidad || 'Desconocida';
+    // const unidadNombre = data.unidad || 'Desconocida';
 
     const tipo = data.tipo === 'PC' ? 'PC' : 'NOT';
 
-    const nombreCompleto = `${unidadNombre}-${tipo}-${oficina}`;
-    data.nombre = nombreCompleto;
+    // const nombreCompleto = `${unidadNombre}-${tipo}-${oficina}`;
+    // data.nombre = nombreCompleto;
 
 
     const dataJson = {
-      nombre: nombreCompleto,
+      nombre: data.nombre,
       unidad:{
         nom: unidad
       },
       oficina:{
         nom: oficina
       } ,
+      observaciones: data.observaciones,
       nro_serie: data.nro_serie,
       tipo: tipo,
-      dominio: data.dominio || false,
+      dominio: data.dominio ? true : false,
     };
-
     console.log("Datos a enviar:", dataJson);
 
     mutation.mutate(dataJson);
@@ -98,6 +98,19 @@ const onSubmit = (data: any) => {
         <CardTitle>Registro de Equipo</CardTitle>
       </CardHeader>
       <form onSubmit={handleSubmit(onSubmit)}>
+
+      <CardContent>
+                <div>
+                  <Label htmlFor="nombre">Nombre PC</Label>
+                  <Input
+                    type="text"
+                    id='nombre'
+                    placeholder="Nombre PC"
+                    {...register('nombre')}
+                  />
+                </div>
+              </CardContent>
+
               <CardContent>
                 <div>
                   <Label htmlFor="nro_serie">Numero de serie</Label>
@@ -119,6 +132,7 @@ const onSubmit = (data: any) => {
                     className="w-full p-2 border rounded"
                     defaultValue="PC"
                   >
+                    <option disabled>Seleccione el tipo</option>
                     <option value="PC">PC</option>
                     <option value="NOT">Notebook</option>
                   </select>
@@ -140,7 +154,7 @@ const onSubmit = (data: any) => {
 
 <CardContent>
   <div className="space-y-2">
-    <Label htmlFor="unidad">Unidad</Label>
+    <Label htmlFor="oficina">Oficina</Label>
   <select
   id="oficina"
   {...register('oficina')}
@@ -199,7 +213,7 @@ const onSubmit = (data: any) => {
 
 
                <CardContent>
-                <div className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+               <div className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                   <Checkbox
                     id="dominio"
                     {...register('dominio')}
@@ -212,7 +226,6 @@ const onSubmit = (data: any) => {
                     <div>Marque si el equipo está en el dominio.</div>
                   </div>
                 </div>
-                {errors.dominio && <p className="text-red-500">{String(errors.dominio.message)}</p>}
               </CardContent>
             
               <Button
