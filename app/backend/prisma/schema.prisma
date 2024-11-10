@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model aplicacion {
+  id         Int          @id @default(autoincrement())
+  nombre     String       @db.VarChar(20)
+  version    String?      @db.VarChar(10)
+  equipo_app equipo_app[]
+}
+
+model equipo {
+  id             Int              @id @default(autoincrement())
+  nombre         String?          @db.VarChar(20)
+  nro_serie      String           @default("No S/N") @db.VarChar(20)
+  id_oficina     Int?
+  id_inventario  String?          @db.Char(15)
+  tipo           String           @db.VarChar(10)
+  observaciones  String?          @db.Text
+  dominio        Boolean          @default(true)
+  oficina        oficina?         @relation(fields: [id_oficina], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "equipo_ibfk_1")
+  equipo_app     equipo_app[]
+  equipo_usuario equipo_usuario[]
+  modificado     modificado[]
+
+  @@index([id_oficina], map: "id_oficina")
+}
+
+model equipo_app {
+  id_equipo  Int
+  id_app     Int
+  equipo     equipo     @relation(fields: [id_equipo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "equipo_app_ibfk_1")
+  aplicacion aplicacion @relation(fields: [id_app], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "equipo_app_ibfk_2")
+
+  @@id([id_equipo, id_app])
+  @@index([id_app], map: "id_app")
+}
+
+model equipo_usuario {
+  id_equipo  Int
+  id_usuario Int
+  equipo     equipo  @relation(fields: [id_equipo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "equipo_usuario_ibfk_1")
+  usuario    usuario @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "equipo_usuario_ibfk_2")
+
+  @@id([id_equipo, id_usuario])
+  @@index([id_usuario], map: "id_usuario")
+}
+
+model modificado {
+  id_equipo  Int
+  id_tecnico Int
+  fecha      DateTime @db.Date
+  equipo     equipo   @relation(fields: [id_equipo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "modificado_ibfk_1")
+  tecnico    tecnico  @relation(fields: [id_tecnico], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "modificado_ibfk_2")
+
+  @@id([id_equipo, id_tecnico])
+  @@index([id_tecnico], map: "id_tecnico")
+}
+
+model oficina {
+  id     Int      @id @default(autoincrement())
+  id_ue  Int
+  nombre String   @db.VarChar(60)
+  piso   Int
+  nom    String   @db.VarChar(8)
+  equipo equipo[]
+  ue     ue       @relation(fields: [id_ue], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "oficina_ibfk_1")
+
+  @@index([id_ue], map: "id_ue")
+}
+
+model tecnico {
+  id         Int          @id @default(autoincrement())
+  nombre     String       @db.VarChar(20)
+  apellido   String       @db.VarChar(20)
+  usuario    String       @db.VarChar(20)
+  pass       String       @db.Char(60)
+  es_admin   Boolean      @default(true)
+  modificado modificado[]
+}
+
+model ue {
+  id      Int       @id @default(autoincrement())
+  nombre  String    @db.VarChar(60)
+  nom     String    @db.VarChar(8)
+  oficina oficina[]
+}
+
+model usuario {
+  id             Int              @id @default(autoincrement())
+  nombre         String           @db.VarChar(30)
+  apellido       String           @db.VarChar(30)
+  usr            String           @db.VarChar(30)
+  interno        Int?
+  equipo_usuario equipo_usuario[]
+}
