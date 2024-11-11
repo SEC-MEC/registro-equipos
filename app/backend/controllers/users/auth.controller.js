@@ -7,10 +7,10 @@ dotenv.config()
 export const loginService = async (req, res) => {
     const {usuario, pass} = req.body;
   try {
-      const existUser = await prisma.tecnico.findUnique({
-          where:{
-              usuario:usuario
-          }
+      const existUser = await prisma.tecnico.findFirst({
+        where:{
+            usuario:usuario
+        }
       })
       if (!existUser) {
       return res.json({ error: 'Usuario no encontrado' });

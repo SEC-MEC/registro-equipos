@@ -1,19 +1,19 @@
 import { Router } from "express";
 import { loginService ,authService } from "../controllers/users/auth.controller.js";
-import { registerService, changePasswordService } from "../controllers/users/users.controller.js";
+import { registerService, changePasswordService, getUsers } from "../controllers/users/users.controller.js";
 
 
 const authRouter = Router()
 
 
 
-userRouter.post("/register", registerService)
-userRouter.post("/login", loginService)
+authRouter.post("/register", registerService)
+authRouter.post("/login", loginService)
 
-userRouter.get("/auth", authService)
-userRouter.get("/user", getUsers)
+authRouter.get("/auth", authService)
+authRouter.get("/user", getUsers)
 
-userRouter.put("/changePassword/:id", changePasswordService)
+authRouter.put("/changePassword/:id", changePasswordService)
 
 
 
