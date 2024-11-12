@@ -44,7 +44,7 @@ export const changePasswordService = async(req,res) => {
 
   try {
           const salt = bcrypt.genSaltSync(10);
-          const hashPassword =  bcrypt.hashSync(password, salt)
+          const hashPassword =  bcrypt.hashSync(pass, salt)
           await prisma.user.update({
               where:{
                   id: parseInt(id)

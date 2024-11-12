@@ -4,6 +4,20 @@ import prisma from "../../../config/db.js";
 
 export const createEquipo = async (req, res) => {   
     const {nombre, nro_serie, id_inventario, oficina, dominio, observacion} = req.body;
+
+    if(nro_serie){
+        const existEquipo = await prisma.equipo.findFirst({
+            where:{
+                nro_serie: nro_serie
+            }
+        })
+        if (existEquipo) {
+            return res.json({ error: 'El número de serie ya está registrado' });
+        }
+    }
+
+    
+
     try {
         const equipo = await prisma.equipo.create({
             data:{
