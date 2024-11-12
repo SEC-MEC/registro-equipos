@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { createEquipo, getOficinas } from '@/api/equipos'
+import { createEquipo, getAplicaciones, getOficinas } from '@/api/equipos'
 import { Card, CardTitle, CardHeader, CardContent } from '../ui/card'
 
 import { Label } from '../ui/label'
@@ -25,6 +25,11 @@ const RegisterForm = () => {
   const { data: oficinas, isLoading } = useQuery({
     queryKey: ['oficinas'],
     queryFn: () => getOficinas(),
+  })
+
+  const {data: aplicaciones, isLoadingAplicaciones} = useQuery({
+    queryKey: ['aplicaciones'],
+    queryFn: () => getAplicaciones(),
   })
 
   
@@ -58,7 +63,7 @@ const mutation = useMutation({
 });
 
 
-
+ 
 
 const onSubmit = (data: any) => {
   try {
@@ -74,17 +79,12 @@ const onSubmit = (data: any) => {
 
     const dataJson = {
       nombre: data.nombre,
-      unidad:{
-        nom: unidad
-      },
-      oficina:{
-        id: data.id_oficina
-      } ,
+      unidad:data.unidad,
+      id_oficina: data.oficina,
       observaciones: data.observaciones,
       nro_serie: data.nro_serie,
       tipo: tipo,
       dominio: data.dominio ? true : false,
-      
       aplicaciones: selectedAplicaciones.map(app => ({
         id_equipo: app.id_equipo,
         id_app: app.id_app,
@@ -237,6 +237,29 @@ const onSubmit = (data: any) => {
                     <Label htmlFor="dominio">En Dominio</Label>
                     <div>Marque si el equipo está en el dominio.</div>
                   </div>
+                </div>
+              </CardContent>
+
+              <CardContent>
+                <div>
+                  {
+                    aplicaciones.map((item: any) => (
+                      <div>
+                        <Checkbox
+                          id={item.id}
+                          key={item.id}
+                          onCheckedChange={(checked) => {
+                            if (checked) {
+                              setSelectedAplicaciones([...selectedAplicaciones, item])
+                            } else {
+                              setSelectedAplicaciones(selectedAplicaciones.filter(app => app.id !== item.id))
+                            }
+                          }}
+                        />
+                        <Label htmlFor={item.id}>{item.nomre}</Label>
+                      </div>
+                    ))
+                  }
                 </div>
               </CardContent>
             

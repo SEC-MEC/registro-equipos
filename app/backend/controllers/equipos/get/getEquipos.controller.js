@@ -28,3 +28,12 @@ export const getOficinas = async (req, res) => {
         console.log("Error en getOficinas: ", error)
     }
 }
+
+export const getAplicaciones = async(req,res) => {
+    try {
+        const aplicaciones = await prisma.aplicacion.findMany();
+        return res.status(200).json(aplicaciones);
+    } catch (error) {
+        console.log(error)
+    }
+}

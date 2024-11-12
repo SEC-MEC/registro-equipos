@@ -30,3 +30,12 @@ export const getOficinas = async () => {
         console.log("Error en la obtencion de oficinas: ", error)
     }
 }
+
+export const getAplicaciones = async () => {
+    try {
+        const res = await clienteAxios.get('/aplicaciones')
+        return res.data
+    } catch (error) {
+        console.log("Error en la obtencion de aplicaciones: ", error)
+    }
+}

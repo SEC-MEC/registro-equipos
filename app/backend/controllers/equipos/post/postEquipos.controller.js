@@ -31,13 +31,13 @@ export const createEquipo = async (req, res) => {
                     nombre,
                     nro_serie,
                     id_inventario,
+
                     tipo,
                     observaciones,
                     dominio,
                     oficina:{
                         connect: {id: id_oficina}
                     },
-                    id_oficina,
                 },
             });
 
