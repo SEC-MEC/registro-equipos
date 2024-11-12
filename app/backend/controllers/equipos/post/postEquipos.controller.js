@@ -2,36 +2,60 @@ import prisma from "../../../config/db.js";
 
 
 
-export const createEquipo = async (req, res) => {   
-    const {nombre, nro_serie, id_inventario, oficina, dominio, observacion} = req.body;
-
-    if(nro_serie){
-        const existEquipo = await prisma.equipo.findFirst({
-            where:{
-                nro_serie: nro_serie
-            }
-        })
-        if (existEquipo) {
-            return res.json({ error: 'El número de serie ya está registrado' });
-        }
-    }
-
-    
+export const createEquipo = async (req, res) => {
+    const {
+        nombre,
+        nro_serie,
+        id_inventario,
+        tipo,
+        observaciones,
+        dominio,
+        id_oficina,
+        aplicaciones, //array de objetos
+    } = req.body;
 
     try {
-        const equipo = await prisma.equipo.create({
-            data:{
-                nombre: nombre,
-                nro_serie: nro_serie,
-                id_inventario: id_inventario,
-                oficina: oficina,
-                dominio: dominio,
-                observacion: observacion
+      
+        const equipo = await prisma.$transaction(async (prisma) => {
 
+            const existNroSerie = await prisma.equipo.findFirst({
+                where: { nro_serie },
+            });
+
+            if(existNroSerie){
+                return res.status(400).json({ error: "El número de serie ya existe" });
             }
-        })
-        return res.json({success: "Equipo creado con éxito", equipo})
+            
+            const nuevoEquipo = await prisma.equipo.create({
+                data: {
+                    nombre,
+                    nro_serie,
+                    id_inventario,
+                    tipo,
+                    observaciones,
+                    dominio,
+                    oficina:{
+                        connect: {id: id_oficina}
+                    },
+                    id_oficina,
+                },
+            });
+
+            if (aplicaciones && aplicaciones.length > 0) {
+                await prisma.equipo_app.createMany({
+                    data: aplicaciones.map((app) => ({
+                        id_equipo: nuevoEquipo.id,
+                        id_app: app.id_app,
+                    })),
+                });
+            }
+
+            return nuevoEquipo;
+        });
+
+        return res.json({ success: "Equipo registrado con éxito", equipo });
     } catch (error) {
-        console.log(error)
+        console.error(error);
+        return res.status(500).json({ error: "Error al crear el equipo" });
     }
-}
+};

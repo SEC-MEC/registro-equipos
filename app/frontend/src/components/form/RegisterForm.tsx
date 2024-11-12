@@ -11,18 +11,23 @@ import { Button } from '../ui/button'
 import { Textarea } from '../ui/textarea'
 import { toast } from "sonner"
 import { Checkbox } from '../ui/checkbox'
+import { useState } from 'react'
 
 
 
 
 const RegisterForm = () => {
 
+
+  const [selectedAplicaciones, setSelectedAplicaciones] = useState<any[]>([])
   const { register, handleSubmit, setValue, formState: { errors } } = useForm()
  
   const { data: oficinas, isLoading } = useQuery({
     queryKey: ['oficinas'],
     queryFn: () => getOficinas(),
   })
+
+  
 
   const queryClient = useQueryClient()
   const navigate = useNavigate()
@@ -73,16 +78,23 @@ const onSubmit = (data: any) => {
         nom: unidad
       },
       oficina:{
-        nom: oficina
+        id: data.id_oficina
       } ,
       observaciones: data.observaciones,
       nro_serie: data.nro_serie,
       tipo: tipo,
       dominio: data.dominio ? true : false,
+      
+      aplicaciones: selectedAplicaciones.map(app => ({
+        id_equipo: app.id_equipo,
+        id_app: app.id_app,
+      })),
     };
+
+
     console.log("Datos a enviar:", dataJson);
 
-    mutation.mutate(dataJson);
+    // mutation.mutate(dataJson);
   } catch (error) {
     console.log("Error:", error);
   }
@@ -166,8 +178,8 @@ const onSubmit = (data: any) => {
   ) : (
     oficinas?.map((oficina: any) => (
       <option
-        key={`${oficina.ue.id}-${oficina.id}`}
-        value={oficina.nom}
+        key={`${oficina.id_ue}-${oficina.id}`}
+        value={oficina.id}
       >
         {oficina.nombre}
       </option>

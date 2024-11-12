@@ -2,7 +2,7 @@
 
 import { Router } from "express";
 import { createEquipo } from "../controllers/equipos/post/postEquipos.controller.js";
-import { getEquipos } from "../controllers/equipos/get/getEquipos.controller.js";
+import { getEquipos, getOficinas } from "../controllers/equipos/get/getEquipos.controller.js";
 
 
 const equipoRouter = Router();
@@ -10,7 +10,7 @@ const equipoRouter = Router();
 
 equipoRouter.post("/create", createEquipo)
 equipoRouter.get("/get", getEquipos)
-
+equipoRouter.get("/oficinas", getOficinas)
 
 
 export default equipoRouter;
