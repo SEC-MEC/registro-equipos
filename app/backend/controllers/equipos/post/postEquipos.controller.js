@@ -28,27 +28,27 @@ export const createEquipo = async (req, res) => {
             
             const nuevoEquipo = await prisma.equipo.create({
                 data: {
-                    nombre,
-                    nro_serie,
-                    id_inventario,
-
-                    tipo,
-                    observaciones,
-                    dominio,
+                    nombre: nombre,
+                    nro_serie: nro_serie,
+                    id_inventario: id_inventario,
+                    tipo: tipo,
+                    observaciones: observaciones,
+                    dominio: dominio,
                     oficina:{
-                        connect: {id: id_oficina}
+                        
+                        connect: {id: parseInt(id_oficina)}
                     },
                 },
             });
 
-            if (aplicaciones && aplicaciones.length > 0) {
-                await prisma.equipo_app.createMany({
-                    data: aplicaciones.map((app) => ({
-                        id_equipo: nuevoEquipo.id,
-                        id_app: app.id_app,
-                    })),
-                });
-            }
+            // if (aplicaciones && aplicaciones.length > 0) {
+            //     await prisma.equipo_app.createMany({
+            //         data: aplicaciones.map((app) => ({
+            //             id_equipo: nuevoEquipo.id,
+            //             id_app: app.id_app,
+            //         })),
+            //     });
+            // }
 
             return nuevoEquipo;
         });

@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { createEquipo, getAplicaciones, getOficinas } from '@/api/equipos'
+import { createEquipo, getOficinas } from '@/api/equipos'
 import { Card, CardTitle, CardHeader, CardContent } from '../ui/card'
 
 import { Label } from '../ui/label'
@@ -11,7 +11,8 @@ import { Button } from '../ui/button'
 import { Textarea } from '../ui/textarea'
 import { toast } from "sonner"
 import { Checkbox } from '../ui/checkbox'
-import { useState } from 'react'
+// import { useState } from 'react'
+// import { ScrollShadow } from '@nextui-org/react'
 
 
 
@@ -19,7 +20,7 @@ import { useState } from 'react'
 const RegisterForm = () => {
 
 
-  const [selectedAplicaciones, setSelectedAplicaciones] = useState<any[]>([])
+  // const [selectedAplicaciones, setSelectedAplicaciones] = useState<any[]>([])
   const { register, handleSubmit, setValue, formState: { errors } } = useForm()
  
   const { data: oficinas, isLoading } = useQuery({
@@ -27,10 +28,10 @@ const RegisterForm = () => {
     queryFn: () => getOficinas(),
   })
 
-  const {data: aplicaciones, isLoadingAplicaciones} = useQuery({
-    queryKey: ['aplicaciones'],
-    queryFn: () => getAplicaciones(),
-  })
+  // const {data: aplicaciones, isLoading: isLoadingAplicaciones} = useQuery({
+  //   queryKey: ['aplicaciones'],
+  //   queryFn: () => getAplicaciones(),
+  // })
 
   
 
@@ -67,11 +68,6 @@ const mutation = useMutation({
 
 const onSubmit = (data: any) => {
   try {
-   const unidad = data.unidad || 'Desconocida';  
-    const oficina = data.oficina.trim() || 'SinOficina'; 
-    // const unidadNombre = data.unidad || 'Desconocida';
-
-    const tipo = data.tipo === 'PC' ? 'PC' : 'NOT';
 
     // const nombreCompleto = `${unidadNombre}-${tipo}-${oficina}`;
     // data.nombre = nombreCompleto;
@@ -83,23 +79,24 @@ const onSubmit = (data: any) => {
       id_oficina: data.oficina,
       observaciones: data.observaciones,
       nro_serie: data.nro_serie,
-      tipo: tipo,
+      tipo: data.tipo,
+      id_inventario:  data.id_inventario,
       dominio: data.dominio ? true : false,
-      aplicaciones: selectedAplicaciones.map(app => ({
-        id_equipo: app.id_equipo,
-        id_app: app.id_app,
-      })),
+  
     };
 
 
     console.log("Datos a enviar:", dataJson);
 
-    // mutation.mutate(dataJson);
+    mutation.mutate(dataJson);
   } catch (error) {
     console.log("Error:", error);
   }
 };
-
+    // aplicaciones: selectedAplicaciones.map(app => ({
+    //     id_equipo: app.id_equipo,
+    //     id_app: app.id_app,
+    //   })),
 
 
 
@@ -240,11 +237,15 @@ const onSubmit = (data: any) => {
                 </div>
               </CardContent>
 
-              <CardContent>
+              {/* <CardContent>
+                {
+                  isLoadingAplicaciones && <p className='text-center font-bold'>Cargando aplicaciones...</p>
+                }
+                 <ScrollShadow offset={100} orientation="horizontal" className="w-[400px] h-[100px]">
                 <div>
-                  {
+                  { aplicaciones && !isLoadingAplicaciones &&
                     aplicaciones.map((item: any) => (
-                      <div>
+                      <div className='flex gap-2 space-y-2'>
                         <Checkbox
                           id={item.id}
                           key={item.id}
@@ -256,12 +257,13 @@ const onSubmit = (data: any) => {
                             }
                           }}
                         />
-                        <Label htmlFor={item.id}>{item.nomre}</Label>
+                        <Label htmlFor={item.id}>{item.nombre}</Label>
                       </div>
                     ))
                   }
                 </div>
-              </CardContent>
+                </ScrollShadow>
+              </CardContent> */}
             
               <Button
     type="submit"

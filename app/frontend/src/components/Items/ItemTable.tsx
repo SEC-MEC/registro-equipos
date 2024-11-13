@@ -113,24 +113,24 @@ export default function Component() {
               <TableBody>
                 <AnimatePresence>
                   {currentData.map((item) => (
-                    <motion.tr
-                      key={item.id_equipo}
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.2 }}
-                      className="hover:bg-zinc-50 transition-colors"
-                    >
-                      <TableCell className="font-medium">{item.nombre}</TableCell>
-                      <TableCell>{item.nro_serie}</TableCell>
-                      <TableCell>{item.tipo}</TableCell>
-                      <TableCell>{item.oficina?.piso}</TableCell>
-                      <TableCell>{item.oficina?.nombre}</TableCell>
-                      <TableCell>{item.oficina?.ue.nombre}</TableCell>
-                      <TableCell>{item.id_inventario}</TableCell>
-                      <TableCell>{item.observaciones}</TableCell>
-                      <TableCell>{item.dominio ? 'Sí' : 'No'}</TableCell>
-                    </motion.tr>
+                  <motion.tr
+  key={`${item.id_equipo}-${item.nro_serie}-${item.oficina?.nombre}`}
+  initial={{ opacity: 0, y: -10 }}
+  animate={{ opacity: 1, y: 0 }}
+  exit={{ opacity: 0, y: -10 }}
+  transition={{ duration: 0.2 }}
+  className="hover:bg-zinc-50 transition-colors"
+>
+  <TableCell className="font-medium">{item.nombre}</TableCell>
+  <TableCell>{item.nro_serie}</TableCell>
+  <TableCell>{item.tipo}</TableCell>
+  <TableCell>{item.oficina?.piso}</TableCell>
+  <TableCell>{item.oficina?.nombre}</TableCell>
+  <TableCell>{item.oficina?.ue?.nombre}</TableCell>
+  <TableCell>{item.id_inventario}</TableCell>
+  <TableCell>{item.observaciones}</TableCell>
+  <TableCell>{item.dominio ? 'Sí' : 'No'}</TableCell>
+</motion.tr>
                   ))}
                 </AnimatePresence>
               </TableBody>
