@@ -11,6 +11,7 @@ export const createEquipo = async (req, res) => {
         observaciones,
         dominio,
         id_oficina,
+        id_tecnico,
         aplicaciones, //array de objetos
     } = req.body;
 
@@ -34,8 +35,13 @@ export const createEquipo = async (req, res) => {
                     tipo: tipo,
                     observaciones: observaciones,
                     dominio: dominio,
+                    modificado:{
+                        create:{
+                            fecha: new Date(),
+                            id_tecnico: parseInt(id_tecnico)
+                        }
+                    },
                     oficina:{
-                        
                         connect: {id: parseInt(id_oficina)}
                     },
                 },

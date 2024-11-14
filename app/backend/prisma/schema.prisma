@@ -27,7 +27,6 @@ model equipo {
   equipo_app     equipo_app[]
   equipo_usuario equipo_usuario[]
   modificado     modificado[]
-
   @@index([id_oficina], map: "id_oficina")
 }
 
@@ -75,7 +74,7 @@ model oficina {
 }
 
 model tecnico {
-  id         Int          @id @default(autoincrement())
+  id         Int          @id @default(autoincrement()) 
   nombre     String       @db.VarChar(20)
   apellido   String       @db.VarChar(20)
   usuario    String       @db.VarChar(20)

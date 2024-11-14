@@ -1,6 +1,4 @@
-'use client'
-
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -42,30 +40,33 @@ export default function Component() {
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [filteredData, setFilteredData] = useState<Item[]>([])
 
   const { data, isLoading, isError } = useQuery<Item[]>({
     queryKey: ['items'],
     queryFn: () => getEquipos()
   })
 
+  useEffect(() => {
+    if (data) {
+      const filtered = data.filter(item =>
+        Object.values(item).some(value =>
+          value && typeof value === 'object'
+            ? Object.values(value).some(v => v && v.toString().toLowerCase().includes(searchTerm.toLowerCase()))
+            : value && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      )
+      setFilteredData(filtered)
+      setCurrentPage(1)
+    }
+  }, [data, searchTerm])
+
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value)
-    setCurrentPage(1) 
   }
 
   if (isLoading) return <div className="flex justify-center items-center h-screen">Cargando...</div>
   if (isError) return <div className="flex justify-center items-center h-screen text-red-500">Error al cargar los datos.</div>
-
-  // const largoDATA = data?.length
-  // console.log("todos los items: ", largoDATA)
-
-  const filteredData = data?.filter(item =>
-    Object.values(item).some(value =>
-      value && typeof value === 'object'
-        ? Object.values(value).some(v => v && v.toString().toLowerCase().includes(searchTerm.toLowerCase()))
-        : value && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  ) || []
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage)
   const startIndex = (currentPage - 1) * itemsPerPage
@@ -81,7 +82,7 @@ export default function Component() {
       <div className="max-w-7xl mx-auto space-y-8 ">
         <aside className='flex justify-between items-center'>
            <h1 className="text-3xl font-bold text-zinc-800">Inventario de Equipos</h1>
-        <Link to='/registro' className='px-3 py-1 rounded-sm w-64 text-center bg-zinc-800 text-white font-semibold hover:bg-zinc-700'>Registrar nuevo equipo</Link>
+           <Link to='/registro' className='px-3 py-1 rounded-sm w-64 text-center bg-zinc-800 text-white font-semibold hover:bg-zinc-700'>Registrar nuevo equipo</Link>
         </aside>
        
         <div className="relative">
@@ -113,30 +114,33 @@ export default function Component() {
               <TableBody>
                 <AnimatePresence>
                   {currentData.map((item) => (
-                  <motion.tr
-  key={`${item.id_equipo}-${item.nro_serie}-${item.oficina?.nombre}`}
-  initial={{ opacity: 0, y: -10 }}
-  animate={{ opacity: 1, y: 0 }}
-  exit={{ opacity: 0, y: -10 }}
-  transition={{ duration: 0.2 }}
-  className="hover:bg-zinc-50 transition-colors"
->
-  <TableCell className="font-medium">{item.nombre}</TableCell>
-  <TableCell>{item.nro_serie}</TableCell>
-  <TableCell>{item.tipo}</TableCell>
-  <TableCell>{item.oficina?.piso}</TableCell>
-  <TableCell>{item.oficina?.nombre}</TableCell>
-  <TableCell>{item.oficina?.ue?.nombre}</TableCell>
-  <TableCell>{item.id_inventario}</TableCell>
-  <TableCell>{item.observaciones}</TableCell>
-  <TableCell>{item.dominio ? 'Sí' : 'No'}</TableCell>
-</motion.tr>
+                    <motion.tr
+                      key={`${item.id_equipo}-${item.nro_serie}-${item.oficina?.nombre}`}
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2 }}
+                      className="hover:bg-zinc-50 transition-colors"
+                    >
+                      <TableCell className="font-medium">{item.nombre}</TableCell>
+                      <TableCell>{item.nro_serie}</TableCell>
+                      <TableCell>{item.tipo}</TableCell>
+                      <TableCell>{item.oficina?.piso}</TableCell>
+                      <TableCell>{item.oficina?.nombre}</TableCell>
+                      <TableCell>{item.oficina?.ue?.nombre}</TableCell>
+                      <TableCell>{item.id_inventario}</TableCell>
+                      <TableCell>{item.observaciones}</TableCell>
+                      <TableCell>{item.dominio ? 'Sí' : 'No'}</TableCell>
+                    </motion.tr>
                   ))}
                 </AnimatePresence>
               </TableBody>
             </Table>
           </div>
         </div>
+        {filteredData.length === 0 && (
+          <div className="text-center text-zinc-600">No se encontraron resultados.</div>
+        )}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Button
