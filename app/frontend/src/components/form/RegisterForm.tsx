@@ -1,4 +1,3 @@
-'use client'
 
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -15,9 +14,13 @@ import { toast } from "sonner"
 
 import { Checkbox } from '../ui/checkbox'
 import { useAuthStore } from '@/context/store'
+import { ScrollShadow } from '@nextui-org/react'
+import { MonitorCheck } from 'lucide-react';
+import { HardDrive } from 'lucide-react';
 
 const RegisterForm = () => {
   const [step, setStep] = useState(1)
+  const [selectedAplicaciones, setSelectedAplicaciones] = useState<{ id: string}[]>([])
 
  const profile = useAuthStore(state => state.profile)
   const userId = profile.data.id
@@ -60,13 +63,11 @@ const RegisterForm = () => {
 
   const onSubmit = (data: any) => {
     try {
-
-
       const oficinaData = JSON.parse(data.oficina);
-      const oficinaNomenclatura = oficinaData.nom;
+      const oficinaNomenclatura = oficinaData.nom.trim();
       const idOficina = oficinaData.id;
       const generarNombre = `${data.unidad}-${data.tipo}-${oficinaNomenclatura}-000`;
-      console.log(oficinaNomenclatura)
+
       const dataJson = {
         nombre: data.nombre ? data.nombre : generarNombre,
         id_oficina: idOficina,
@@ -75,16 +76,26 @@ const RegisterForm = () => {
         tipo: data.tipo,
         id_inventario:  data.id_inventario,
         dominio: data.dominio ? true : false,
-        id_tecnico: userId
+        id_tecnico: userId, 
+        aplicaciones: selectedAplicaciones,
       };
 
+      console.log(dataJson)
       mutation.mutate(dataJson)
     } catch (error) {
       console.log(error)
     }
   }
-
-
+  const handleCheckboxChange = (aplicacionId: string) => {
+    setSelectedAplicaciones(prev => {
+      if (prev.some(app => app.id === aplicacionId)) {
+        return prev.filter(app => app.id !== aplicacionId);
+      }
+      return [...prev, { id: aplicacionId }];
+    });
+  };
+  
+  
 
   const nextStep = () => setStep(2)
   const prevStep = () => setStep(1)
@@ -92,7 +103,7 @@ const RegisterForm = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Registro de Equipo</CardTitle>
+        <CardTitle className='flex gap-2 items-center'>Registro de Equipo <HardDrive/></CardTitle>
       </CardHeader>
       <form onSubmit={handleSubmit(onSubmit)}>
         <AnimatePresence mode="wait">
@@ -143,8 +154,6 @@ const RegisterForm = () => {
               </CardContent>
 
               <CardContent>
-                
-
                 <div className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                   <div>
                     <Checkbox
@@ -241,23 +250,27 @@ const RegisterForm = () => {
                   />
                 </div>
               </CardContent>
-              <CardContent>
-                <div>
-                  <Label>Aplicaciones</Label>
-                  <div className="grid grid-cols-2 gap-4">
-                    {aplicaciones.map((app: any) => (
-                      <div key={app} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={app}
-                          {...register('aplicaciones')}
-                          value={app.nombre}
-                        />
-                        <Label htmlFor={app}>{app.nombre}</Label>
-                      </div>
-                    ))}
-                  </div>
+            
+              {
+              !aplicaciones || aplicaciones.length === 0 ? <div className='flex items-center justify-center text-xl'>No hay aplicaciones disponibles</div> : null
+            }            
+            <Label className=' flex  justify-center items-center text-md gap-2'>Aplicaciones instaladas <MonitorCheck/> </Label>
+            <ScrollShadow offset={100} orientation="horizontal" className="w-full h-[300px] overflow-y-auto rounded-md border">
+            {
+              aplicaciones?.map((app: {id: number, nombre: string}) => (
+                <div key={app.id} className="flex gap-1 items-center text-xl px-4">
+                <input
+        type="checkbox"
+        id={`app-${app.id}`}
+        className="text-2xl p-4 rounded-md"
+        onChange={() => handleCheckboxChange(app.id.toString())}
+      />
+              <label htmlFor={`app-${app.id}`} className="flex-grow cursor-pointer">{app.nombre}</label>
                 </div>
-              </CardContent>
+              ))
+            } 
+            </ScrollShadow>
+
               <CardFooter>
                 <Button type="button" onClick={prevStep} className="w-full mr-2">Volver</Button>
                 <Button type="submit" className="w-full">Registrar</Button>

@@ -1,3 +1,4 @@
+import { connect } from "http2";
 import prisma from "../../../config/db.js";
 import os from 'os';
 import si from 'systeminformation';
@@ -31,77 +32,66 @@ export const createEquipo = async (req, res) => {
     } = req.body;
 
     try {
-        const equipo = await prisma.$transaction(async (prisma) => {
-      
-        const baseNombre = nombre.slice(0, -4); 
-
-        const lastEquipo = await prisma.equipo.findFirst({
-        where: {
-            nombre: {
-            startsWith: baseNombre,
-        },
-        },
-        orderBy: {
-            nombre: 'desc',
-        },
-    });
-
-        let newNombre = nombre;
-
-        if (lastEquipo) {
-        // Extraer el sufijo numérico del último equipo
-        const lastNumber = parseInt(lastEquipo.nombre.slice(-3), 10);
-        // Incrementar el sufijo numérico
-        const nextNumber = (lastNumber + 1).toString().padStart(3, '0');
-        // Generar el nuevo nombre
-        newNombre = `${baseNombre} ${nextNumber}`;
-        }
-
-
-            const existNroSerie = await prisma.equipo.findFirst({
-                where: { nro_serie },
+        const equipo = await prisma.$transaction(async (tx) => {
+            const baseNombre = nombre.slice(0, -4);
+          
+            const lastEquipo = await tx.equipo.findFirst({
+              where: {
+                nombre: {
+                  startsWith: baseNombre,
+                },
+              },
+              orderBy: {
+                nombre: 'desc',
+              },
             });
-
-            if(existNroSerie){
+          
+            let newNombre = nombre;
+            if (lastEquipo) {
+              const lastNumber = parseInt(lastEquipo.nombre.slice(-3), 10);
+              const nextNumber = (lastNumber + 1).toString().padStart(3, '0');
+              newNombre = `${baseNombre}-${nextNumber}`;
+            }
+          
+            const existNroSerie = await tx.equipo.findFirst({
+              where: { nro_serie },
+            });
+          
+            if (existNroSerie) {
                 return res.status(400).json({ error: "El número de serie ya existe" });
             }
-
-            console.log("El nombre es este: ",nombre)
-
-            
-            const nuevoEquipo = await prisma.equipo.create({
-                data: {
-                    nombre: nombre,
-                    nro_serie: nro_serie,
-                    id_inventario: id_inventario,
-                    tipo: tipo,
-
-                    observaciones: observaciones,
-                    dominio: dominio,
-
-                    modificado:{
-                        create:{
-                            fecha: new Date(),
-                            id_tecnico: parseInt(id_tecnico)
-                        }
-                    },
-                    oficina:{
-                        connect: {id: parseInt(id_oficina)}
-                    },
+          
+            const nuevoEquipo = await tx.equipo.create({
+              data: {
+                nombre: newNombre,
+                nro_serie,
+                id_inventario,
+                tipo,
+                observaciones,
+                dominio,
+                modificado: {
+                  create: {
+                    fecha: new Date(),
+                    id_tecnico: parseInt(id_tecnico),
+                  },
                 },
+                oficina: {
+                  connect: { id: parseInt(id_oficina) },
+                },
+              },
             });
-
+          
             if (aplicaciones && aplicaciones.length > 0) {
-                await prisma.equipo_app.createMany({
-                    data: aplicaciones.map((app) => ({
-                        id_equipo: nuevoEquipo.id,
-                        id_app: app.id_app,
-                    })),
-                });
+              await tx.equipo_app.createMany({
+                data: aplicaciones.map((app) => ({
+                  id_equipo: nuevoEquipo.id,
+                  id_app: app.id_app
+                })),
+              });
             }
-
+          
             return nuevoEquipo;
-        });
+          });
 
         return res.json({ success: "Equipo registrado con éxito", equipo });
     } catch (error) {
