@@ -3,6 +3,20 @@ import os from 'os';
 import si from 'systeminformation';
 
 
+export const existPcName = async(req, res) => {
+    const {nombre} = req.body;
+    try {
+        const result = await prisma.equipo.findFirst({
+            where: { nombre: nombre },
+        });
+        if(result){
+            return res.json({exist: true});
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export const createEquipo = async (req, res) => {
     const {
         nombre,
@@ -17,8 +31,32 @@ export const createEquipo = async (req, res) => {
     } = req.body;
 
     try {
-      
         const equipo = await prisma.$transaction(async (prisma) => {
+      
+        const baseNombre = nombre.slice(0, -4); 
+
+        const lastEquipo = await prisma.equipo.findFirst({
+        where: {
+            nombre: {
+            startsWith: baseNombre,
+        },
+        },
+        orderBy: {
+            nombre: 'desc',
+        },
+    });
+
+        let newNombre = nombre;
+
+        if (lastEquipo) {
+        // Extraer el sufijo numérico del último equipo
+        const lastNumber = parseInt(lastEquipo.nombre.slice(-3), 10);
+        // Incrementar el sufijo numérico
+        const nextNumber = (lastNumber + 1).toString().padStart(3, '0');
+        // Generar el nuevo nombre
+        newNombre = `${baseNombre} ${nextNumber}`;
+        }
+
 
             const existNroSerie = await prisma.equipo.findFirst({
                 where: { nro_serie },
@@ -27,6 +65,9 @@ export const createEquipo = async (req, res) => {
             if(existNroSerie){
                 return res.status(400).json({ error: "El número de serie ya existe" });
             }
+
+            console.log("El nombre es este: ",nombre)
+
             
             const nuevoEquipo = await prisma.equipo.create({
                 data: {
@@ -34,8 +75,10 @@ export const createEquipo = async (req, res) => {
                     nro_serie: nro_serie,
                     id_inventario: id_inventario,
                     tipo: tipo,
+
                     observaciones: observaciones,
                     dominio: dominio,
+
                     modificado:{
                         create:{
                             fecha: new Date(),
@@ -48,14 +91,14 @@ export const createEquipo = async (req, res) => {
                 },
             });
 
-            // if (aplicaciones && aplicaciones.length > 0) {
-            //     await prisma.equipo_app.createMany({
-            //         data: aplicaciones.map((app) => ({
-            //             id_equipo: nuevoEquipo.id,
-            //             id_app: app.id_app,
-            //         })),
-            //     });
-            // }
+            if (aplicaciones && aplicaciones.length > 0) {
+                await prisma.equipo_app.createMany({
+                    data: aplicaciones.map((app) => ({
+                        id_equipo: nuevoEquipo.id,
+                        id_app: app.id_app,
+                    })),
+                });
+            }
 
             return nuevoEquipo;
         });

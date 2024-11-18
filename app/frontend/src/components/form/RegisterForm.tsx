@@ -42,7 +42,7 @@ const RegisterForm = () => {
     mutationFn: createEquipo,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['equipos'] })
-      navigate('/dashboard')
+      navigate('/auth')
       toast("Equipo registrado correctamente", {
         description: "El equipo se ha registrado correctamente",
         action: {
@@ -61,15 +61,15 @@ const RegisterForm = () => {
   const onSubmit = (data: any) => {
     try {
 
-      // const nextNumber = getNextNumber();
 
-      // const nombreCompleto = `${data.unidad}-${tipo}-${oficinaNombre}-${nextNumber}`;
-      // data.nombre = nombreCompleto;
-
+      const oficinaData = JSON.parse(data.oficina);
+      const oficinaNomenclatura = oficinaData.nom;
+      const idOficina = oficinaData.id;
+      const generarNombre = `${data.unidad}-${data.tipo}-${oficinaNomenclatura}-000`;
+      console.log(oficinaNomenclatura)
       const dataJson = {
-        nombre: data.nombre,
-        unidad:data.unidad,
-        id_oficina: data.oficina,
+        nombre: data.nombre ? data.nombre : generarNombre,
+        id_oficina: idOficina,
         observaciones: data.observaciones,
         nro_serie: data.nro_serie,
         tipo: data.tipo,
@@ -84,11 +84,7 @@ const RegisterForm = () => {
     }
   }
 
-  // let lastNumber = 0;
-  // const getNextNumber = () => {
-  //   lastNumber += 1;
-  //   return lastNumber.toString().padStart(3, '0');
-  // };
+
 
   const nextStep = () => setStep(2)
   const prevStep = () => setStep(1)
@@ -204,7 +200,7 @@ const RegisterForm = () => {
     oficinas?.map((oficina: any) => (
       <option
         key={`${oficina.id_ue}-${oficina.id}`}
-        value={oficina.id}
+        value={JSON.stringify(oficina)}
       >
         {oficina.nombre}
       </option>
