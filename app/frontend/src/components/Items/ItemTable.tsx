@@ -8,6 +8,8 @@ import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search } from '
 import { getEquipos } from '@/api/equipos'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 interface Ue {
   id: number;
@@ -19,6 +21,10 @@ interface Oficina {
   nombre: string;
   piso: number;
   ue: Ue;
+}
+
+interface Modificado {
+  fecha: string;
 }
 
 interface Item {
@@ -34,6 +40,7 @@ interface Item {
   observaciones: string;
   dominio: boolean;
   oficina: Oficina;
+  modificado: Modificado;
 }
 
 export default function Component() {
@@ -107,7 +114,8 @@ export default function Component() {
                   <TableHead className="bg-zinc-50 text-zinc-600">Oficina</TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">UE</TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">ID Inventario</TableHead>
-                  <TableHead className="bg-zinc-50 text-zinc-600">Observaciones</TableHead>
+                  <TableHead className="bg-zinc-50 text-zinc-600">Usuarios del PC</TableHead> 
+                  <TableHead className="bg-zinc-50 text-zinc-600">Fecha</TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">Dominio</TableHead>
                 </TableRow>
               </TableHeader>
@@ -130,6 +138,7 @@ export default function Component() {
                       <TableCell>{item.oficina?.ue?.nombre}</TableCell>
                       <TableCell>{item.id_inventario}</TableCell>
                       <TableCell>{item.observaciones}</TableCell>
+                      <TableCell>{item.modificado?.fecha ? format(new Date(item.modificado?.fecha), 'dd/MM/yyyy', { locale: es }) : ''}</TableCell>
                       <TableCell>{item.dominio ? 'Sí' : 'No'}</TableCell>
                     </motion.tr>
                   ))}

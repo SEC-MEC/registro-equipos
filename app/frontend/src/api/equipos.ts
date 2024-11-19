@@ -16,9 +16,20 @@ export const getEquipos = async () => {
 export const createEquipo = async (data: any) => {
     try {
         const res = await clienteAxios.post('/create', data)
-        return res.data
-    } catch (error) {
-        console.log("Error en la creacion de equipos: ", error)
+        return res.data;
+    } catch (error: any) {
+        console.log("Error en la creacion de equipos: ", error);
+        throw error.response ? error.response.data : new Error("Error en la creacion de equipos");
+    }
+}
+
+export const generateEquipoName = async (nombre: string): Promise<string> => {
+    try {
+        const response = await clienteAxios.post('/generate-name', { nombre });
+        return response.data.generatedName;
+    } catch (error: any) {
+        console.error("Error al generar el nombre del equipo:", error);
+        throw error.response ? error.response.data : new Error("Error al generar el nombre del equipo");
     }
 }
 

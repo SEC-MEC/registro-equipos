@@ -18,9 +18,45 @@ export const existPcName = async(req, res) => {
     }
 }
 
+export const generateEquipoName = async (req, res) => {
+  const {
+      nombre,
+  } = req.body;
+
+  try {
+      const lastEquipo = await prisma.equipo.findFirst({
+          where: {
+              nombre: {
+                  startsWith: nombre,
+              },
+          },
+          orderBy: {
+              nombre: 'desc',
+          },
+      });
+
+      let generateNum = "001";
+
+      if (lastEquipo) {
+          const match = lastEquipo.nombre.match(/-(\d{3})$/);
+          if (match) {
+              const lastNum = parseInt(match[1], 10);
+              generateNum = (lastNum + 1).toString().padStart(3, '0');
+          }
+      }
+
+      const generateName = `${nombre}-${generateNum}`;
+
+      return res.json({ generatedName: generateName });
+  } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Error al generar el nombre del equipo" });
+  }
+};
+
 export const createEquipo = async (req, res) => {
     const {
-        nombre,
+      nombre,
         nro_serie,
         id_inventario,
         tipo,
@@ -28,52 +64,26 @@ export const createEquipo = async (req, res) => {
         dominio,
         id_oficina,
         id_tecnico,
-        aplicaciones, //array de objetos
+        // aplicaciones, //array de objetos
     } = req.body;
 
     try {
         const equipo = await prisma.$transaction(async (tx) => {
-            const baseNombre = nombre.slice(0, -4);
-          
-            const lastEquipo = await tx.equipo.findFirst({
-              where: {
-                nombre: {
-                  startsWith: baseNombre,
-                },
-              },
-              orderBy: {
-                nombre: 'desc',
-              },
-            });
-          
-            let newNombre = nombre;
-            if (lastEquipo) {
-              const lastNumber = parseInt(lastEquipo.nombre.slice(-3), 10);
-              const nextNumber = (lastNumber + 1).toString().padStart(3, '0');
-              newNombre = `${baseNombre}-${nextNumber}`;
-            }
-          
-            const existNroSerie = await tx.equipo.findFirst({
-              where: { nro_serie },
-            });
-          
-            if (existNroSerie) {
-                return res.status(400).json({ error: "El número de serie ya existe" });
-            }
+
           
             const nuevoEquipo = await tx.equipo.create({
               data: {
-                nombre: newNombre,
+                nombre,
                 nro_serie,
                 id_inventario,
                 tipo,
                 observaciones,
                 dominio,
-                modificado: {
-                  create: {
-                    fecha: new Date(),
+                modificado:{
+                  create:{
                     id_tecnico: parseInt(id_tecnico),
-                  },
+                    fecha: new Date(),
+                  }
                 },
                 oficina: {
                   connect: { id: parseInt(id_oficina) },
@@ -81,14 +91,14 @@ export const createEquipo = async (req, res) => {
               },
             });
           
-            if (aplicaciones && aplicaciones.length > 0) {
-              await tx.equipo_app.createMany({
-                data: aplicaciones.map((app) => ({
-                  id_equipo: nuevoEquipo.id,
-                  id_app: app.id_app
-                })),
-              });
-            }
+            // if (aplicaciones && aplicaciones.length > 0) {
+            //   await tx.equipo_app.createMany({
+            //     data: aplicaciones.map((app) => ({
+            //       id_equipo: nuevoEquipo.id,
+            //       id_app: app.id_app
+            //     })),
+            //   });
+            // }
           
             return nuevoEquipo;
           });

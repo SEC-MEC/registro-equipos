@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { createEquipo, getAplicaciones, getOficinas } from '@/api/equipos'
+import { createEquipo, generateEquipoName, getOficinas } from '@/api/equipos'
 import { Card, CardTitle, CardHeader, CardContent, CardFooter } from '../ui/card'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Label } from '../ui/label'
@@ -14,13 +14,20 @@ import { toast } from "sonner"
 
 import { Checkbox } from '../ui/checkbox'
 import { useAuthStore } from '@/context/store'
-import { ScrollShadow } from '@nextui-org/react'
-import { MonitorCheck } from 'lucide-react';
+
 import { HardDrive } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '../ui/alert'
+
+
+interface CreateEquipoInput {
+  nombre: string;
+  [key: string]: any; 
+}
 
 const RegisterForm = () => {
   const [step, setStep] = useState(1)
-  const [selectedAplicaciones, setSelectedAplicaciones] = useState<{ id: string}[]>([])
+  const [generatedName, setGeneratedName] = useState('');
+  const [data, setData] = useState(null);
 
  const profile = useAuthStore(state => state.profile)
   const userId = profile.data.id
@@ -33,15 +40,27 @@ const RegisterForm = () => {
     queryFn: () => getOficinas(),
   })
 
-  const { data: aplicaciones } = useQuery({
-    queryKey: ['aplicaciones'],
-    queryFn: () => getAplicaciones(),
-  })
+  // const { data: aplicaciones } = useQuery({
+  //   queryKey: ['aplicaciones'],
+  //   queryFn: () => getAplicaciones(),
+  // })
 
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
-  const mutation = useMutation({
+  const generateNameMutation = useMutation({
+    mutationFn: generateEquipoName, 
+    onSuccess: (generatedName: any) => {
+      setGeneratedName(generatedName);
+    },
+    onError: (error: any) => {
+      toast("Error al generar el nombre del equipo", {
+        description: error?.error || error.message,
+      });
+    }
+  });
+
+  const createEquipoMutation = useMutation({
     mutationFn: createEquipo,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['equipos'] })
@@ -54,11 +73,11 @@ const RegisterForm = () => {
         },
       })
     },
-    onError: (error) => {
+    onError: (error: any) => {
       toast("Error al registrar el equipo", {
-        description: error.message,
-      })
-    }
+          description: error?.error || error.message,
+      });
+  }
   })
 
   const onSubmit = (data: any) => {
@@ -66,7 +85,7 @@ const RegisterForm = () => {
       const oficinaData = JSON.parse(data.oficina);
       const oficinaNomenclatura = oficinaData.nom.trim();
       const idOficina = oficinaData.id;
-      const generarNombre = `${data.unidad}-${data.tipo}-${oficinaNomenclatura}-000`;
+      const generarNombre = `${data.unidad}-${data.tipo}-${oficinaNomenclatura}`;
 
       const dataJson = {
         nombre: data.nombre ? data.nombre : generarNombre,
@@ -77,23 +96,42 @@ const RegisterForm = () => {
         id_inventario:  data.id_inventario,
         dominio: data.dominio ? true : false,
         id_tecnico: userId, 
-        aplicaciones: selectedAplicaciones,
       };
 
       console.log(dataJson)
-      mutation.mutate(dataJson)
+      handleGenerateName(dataJson)
     } catch (error) {
       console.log(error)
     }
   }
-  const handleCheckboxChange = (aplicacionId: string) => {
-    setSelectedAplicaciones(prev => {
-      if (prev.some(app => app.id === aplicacionId)) {
-        return prev.filter(app => app.id !== aplicacionId);
-      }
-      return [...prev, { id: aplicacionId }];
-    });
+
+  const handleGenerateName = (data: any) => {
+    generateNameMutation.mutate(data.nombre);
+    setData(data);
   };
+  
+  function isCreateEquipoInput(data: any): data is CreateEquipoInput {
+    return typeof data === 'object' && !Array.isArray(data) && 'nombre' in data;
+  }
+
+  const handleCreateEquipo = () => {
+    if (isCreateEquipoInput(data)) {
+      createEquipoMutation.mutate({ ...(data as CreateEquipoInput), nombre: generatedName });
+    } else {
+      toast("Error al registrar el equipo", {
+        description: "Datos inválidos",
+      });
+    }
+  };
+
+  // const handleCheckboxChange = (aplicacionId: string) => {
+  //   setSelectedAplicaciones(prev => {
+  //     if (prev.some(app => app.id === aplicacionId)) {
+  //       return prev.filter(app => app.id !== aplicacionId);
+  //     }
+  //     return [...prev, { id: aplicacionId }];
+  //   });
+  // };
   
   
 
@@ -104,6 +142,18 @@ const RegisterForm = () => {
     <Card>
       <CardHeader>
         <CardTitle className='flex gap-2 items-center'>Registro de Equipo <HardDrive/></CardTitle>
+        {
+                    generatedName && (
+                      <Alert className='flex flex-col p-3 py-4'>
+                        <AlertTitle className='text-start'>{generatedName}</AlertTitle>
+                        <div className='flex items-center gap-2 justify-between'>
+                           <AlertDescription className='font-semibold '>Desea asignarle este nombre?</AlertDescription>
+                        <Button onClick={handleCreateEquipo}>Confirmar nombre</Button>
+                        </div>
+                       
+                      </Alert>
+                    )
+                  }
       </CardHeader>
       <form onSubmit={handleSubmit(onSubmit)}>
         <AnimatePresence mode="wait">
@@ -251,7 +301,7 @@ const RegisterForm = () => {
                 </div>
               </CardContent>
             
-              {
+              {/* {
               !aplicaciones || aplicaciones.length === 0 ? <div className='flex items-center justify-center text-xl'>No hay aplicaciones disponibles</div> : null
             }            
             <Label className=' flex  justify-center items-center text-md gap-2'>Aplicaciones instaladas <MonitorCheck/> </Label>
@@ -269,7 +319,7 @@ const RegisterForm = () => {
                 </div>
               ))
             } 
-            </ScrollShadow>
+            </ScrollShadow> */}
 
               <CardFooter>
                 <Button type="button" onClick={prevStep} className="w-full mr-2">Volver</Button>

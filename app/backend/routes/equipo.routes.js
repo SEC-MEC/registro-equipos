@@ -1,7 +1,7 @@
 
 
 import { Router } from "express";
-import { createEquipo, getInfoEquipo } from "../controllers/equipos/post/postEquipos.controller.js";
+import { createEquipo, generateEquipoName, getInfoEquipo } from "../controllers/equipos/post/postEquipos.controller.js";
 import { getAplicaciones, getEquipos, getOficinas } from "../controllers/equipos/get/getEquipos.controller.js";
 
 
@@ -13,5 +13,6 @@ equipoRouter.get("/get", getEquipos)
 equipoRouter.get("/oficinas", getOficinas)
 equipoRouter.get("/aplicaciones", getAplicaciones)
 equipoRouter.post("/pcInfo", getInfoEquipo)
+equipoRouter.post("/generate-name", generateEquipoName);
 
 export default equipoRouter;
