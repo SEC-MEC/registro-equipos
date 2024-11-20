@@ -33,6 +33,16 @@ export const generateEquipoName = async (nombre: string): Promise<string> => {
     }
 }
 
+export const getInfoPc = async (data: string) => {
+    try {
+        const res = await clienteAxios.post("/pcInfo", data)
+        return res.data
+    } catch (error : any) {
+        console.error("Error al generar el nombre del equipo:", error);
+        throw error.response ? error.response.data : new Error("Error al generar el nombre del equipo");
+    }
+}
+
 export const getOficinas = async () => {
     try {
         const res = await clienteAxios.get('/oficinas')

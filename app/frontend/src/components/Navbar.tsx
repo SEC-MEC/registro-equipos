@@ -1,4 +1,3 @@
-'use client'
 
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -14,6 +13,8 @@ import {
 } from 'lucide-react'
 
 import { useAuthStore } from '@/context/store'
+
+
 
 const navItems = [
   { icon: Home, label: 'Inicio', href: '/auth' },
@@ -33,7 +34,7 @@ const  Navbar = ({className}: NavbarProps)  => {
   const navigate = useNavigate()
 
     const logOut = useAuthStore((state) => state.logout)
-   
+
 
   return (
       <nav className={cn("bg-zinc-100 ", className)}>
@@ -70,8 +71,11 @@ const  Navbar = ({className}: NavbarProps)  => {
               {!isCollapsed && <span>{item.label}</span>}
             </Button>
           ))}
+
+          
         </nav>
       </ScrollArea>
+
       <div className="p-4 border-t border-zinc-200">
         <Button
           variant="ghost"

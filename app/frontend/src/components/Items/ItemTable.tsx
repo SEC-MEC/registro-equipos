@@ -5,11 +5,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search } from 'lucide-react'
-import { getEquipos } from '@/api/equipos'
-import { useQuery } from '@tanstack/react-query'
+import { getEquipos, getInfoPc, getOficinas } from '@/api/equipos'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { useAuthStore } from '@/context/store'
+import { toast } from 'sonner'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTrigger } from '../ui/dialog'
+
 
 interface Ue {
   id: number;
@@ -43,15 +47,43 @@ interface Item {
   modificado: Modificado;
 }
 
-export default function Component() {
+export default function Component () {
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
   const [filteredData, setFilteredData] = useState<Item[]>([])
+  const [idOficina, setIdOficina] = useState('')
 
   const { data, isLoading, isError } = useQuery<Item[]>({
     queryKey: ['items'],
     queryFn: () => getEquipos()
+  })
+
+  const profile = useAuthStore((state) => state.profile)
+  const userId = profile?.data.id
+
+  const mutation = useMutation({
+    mutationFn: getInfoPc,
+    onSuccess: (success: any) => {
+      toast(success.success || success.message)
+    },
+    onError: (error: any) => {
+      toast(error.info || error.message)
+  }})
+
+  const handlePcInfo = async () => {
+   if(!userId) return <div><p>El tecnico no se encuentra</p></div>
+   const pcInfoJson = {
+      id_oficina: idOficina,
+      id_tecnico: userId,
+   }
+   console.log("la ofi",idOficina)
+   mutation.mutate(pcInfoJson)
+  }
+
+  const { data: oficinas, isLoading: isLoadingOficinas } = useQuery({
+    queryKey: ['oficinas'],
+    queryFn: () => getOficinas(),
   })
 
   useEffect(() => {
@@ -89,7 +121,41 @@ export default function Component() {
       <div className="max-w-7xl mx-auto space-y-8 ">
         <aside className='flex justify-between items-center'>
            <h1 className="text-3xl font-bold text-zinc-800">Inventario de Equipos</h1>
-           <Link to='/registro' className='px-3 py-1 rounded-sm w-64 text-center bg-zinc-800 text-white font-semibold hover:bg-zinc-700'>Registrar nuevo equipo</Link>
+           <div className='flex items-center gap-2'>
+              <Link to='/registro' className='px-3 py-1 rounded-sm w-64 text-center bg-zinc-800 text-white font-semibold hover:bg-zinc-700'>Registrar nuevo equipo</Link>
+              <Dialog>
+                <DialogTrigger>
+                  <Button>Registrar este equipo</Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader className='font-semibold text-xl'>Registrar equipo</DialogHeader>
+                  <DialogDescription>
+                 
+                    <form>
+                      <select 
+                        className='px-3 py-1 border shadow-xl rounded-md text-black'
+                        onChange={(e) => setIdOficina(e.target.value)}
+                        value={idOficina}
+                        required
+                      >
+                        <option value="" disabled>Selecciona una oficina</option>
+                        {isLoadingOficinas && <option value="" disabled>Cargando oficinas...</option>}
+                        {oficinas?.map((oficina: Oficina) => (
+                        <option key={oficina.id} value={oficina.id}>{oficina.nombre}</option>
+                        ))}
+                      </select>
+                      <DialogFooter>
+                        <Button type="submit" onClick={handlePcInfo} className=''>Registrar</Button>
+                      </DialogFooter>
+                    </form>
+             
+    
+                  </DialogDescription>
+               
+                </DialogContent>
+              </Dialog>
+           </div>
+         
         </aside>
        
         <div className="relative">

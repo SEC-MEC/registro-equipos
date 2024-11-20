@@ -112,39 +112,43 @@ export const createEquipo = async (req, res) => {
 
 
 
-export const getInfoEquipo = async (req, res) => {  
+export const getInfoEquipo = async (req, res) => {
+    
+    const {id_tecnico, id_oficina} = req.body;
     try {
         const pcName = os.hostname();
         const userName = os.userInfo().username;
         const systemInfo = await si.system();
         const serialNumber = systemInfo.serial;
 
-        const exisPcName = await prisma.equipo.findFirst({
-            where: { nombre: pcName },
-        });
-        if(exisPcName){
-            return res.status(400).json({ error: "El nombre de equipo ya existe" });
-        }
-        const exisSerialNumber = await prisma.equipo.findFirst({
-            where: { nro_serie: serialNumber },
-        });
-        if(exisSerialNumber){
-            return res.status(400).json({ error: "El número de serie ya existe" });
-        }
+        // const exisPcName = await prisma.equipo.findFirst({
+        //     where: { nombre: pcName },
+        // });
+        // if(exisPcName){
+        //     return res.status(400).json({ info: "El nombre de equipo ya existe" });
+        // }
+        // const exisSerialNumber = await prisma.equipo.findFirst({
+        //     where: { nro_serie: serialNumber },
+        // });
+        // if(exisSerialNumber){
+        //     return res.json({ info: "El número de serie ya existe" });
+        // }
       
         const result = await prisma.equipo.create({
             data:{
                 nombre: pcName,
                 nro_serie: serialNumber,
                 tipo: "PC",
+                observaciones: userName || "Sin usuario",
                 oficina:{
-                    create:{
-                        piso
-                    }
+                    connect:{
+                        id: parseInt(id_oficina)
                 },
-                equipo_usuario:{
+            },
+                modificado:{
                     create:{
-                        nombre: userName ? userName : "Sin usuario"
+                        id_tecnico: parseInt(id_tecnico),
+                        fecha: new Date()
                     }
                 }
             }

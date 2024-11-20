@@ -17,7 +17,7 @@ import { useAuthStore } from '@/context/store'
 
 import { HardDrive } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert'
-
+import { Building } from 'lucide-react';
 
 interface CreateEquipoInput {
   nombre: string;
@@ -98,7 +98,6 @@ const RegisterForm = () => {
         id_tecnico: userId, 
       };
 
-      console.log(dataJson)
       handleGenerateName(dataJson)
     } catch (error) {
       console.log(error)
@@ -142,15 +141,17 @@ const RegisterForm = () => {
     <Card>
       <CardHeader>
         <CardTitle className='flex gap-2 items-center'>Registro de Equipo <HardDrive/></CardTitle>
-        {
-                    generatedName && (
-                      <Alert className='flex flex-col p-3 py-4'>
-                        <AlertTitle className='text-start'>{generatedName}</AlertTitle>
-                        <div className='flex items-center gap-2 justify-between'>
-                           <AlertDescription className='font-semibold '>Desea asignarle este nombre?</AlertDescription>
-                        <Button onClick={handleCreateEquipo}>Confirmar nombre</Button>
+        {   generatedName && (
+            <Alert className='grid grid-cols-1 p-3 py-4 space-y-2'>
+            <AlertTitle className='text-start font-semibold'>
+            {
+             generatedName
+            }
+            </AlertTitle>
+            <div className='flex items-center gap-2 justify-between'>
+            <AlertDescription className=' '>Desea asignarle este nombre?</AlertDescription>
+            <Button onClick={handleCreateEquipo}>Confirmar nombre</Button>
                         </div>
-                       
                       </Alert>
                     )
                   }
@@ -165,6 +166,15 @@ const RegisterForm = () => {
               exit={{ opacity: 0, x: 100 }}
               transition={{ duration: 0.3 }}
             >
+               <CardContent className=''>
+                        <Input
+                          type="text"
+                          id='nombre'
+                          placeholder="Nombre de PC"
+                          className='' 
+                          {...register('nombre')}
+                          />
+                     </CardContent>
               <CardContent>
                 <div>
                   <Label> Numero de serie   </Label>
@@ -176,17 +186,7 @@ const RegisterForm = () => {
                   />
                 </div>
               </CardContent>
-              <CardContent>
-                <div>
-                  <Label> Nombre de PC   </Label>
-                  <Input
-                    type="text"
-                    id='nombre'
-                    placeholder="Nombre"
-                    {...register('nombre')}
-                  />
-                </div>
-              </CardContent>
+             
 
               <CardContent>
                 <div>
@@ -246,7 +246,7 @@ const RegisterForm = () => {
             >
              <CardContent>
   <div className="space-y-2">
-    <Label htmlFor="oficina">Oficina</Label>
+    <Label htmlFor="oficina" className='flex items-center gap-1'> Oficina <Building/></Label>
   <select
   id="oficina"
   {...register('oficina')}
@@ -273,13 +273,13 @@ const RegisterForm = () => {
 
 <CardContent>
   <div className="space-y-2">
-    <Label htmlFor="unidad">Unidad</Label>
+    <Label htmlFor="unidad" className='flex gap-2 items-center'>Unidad <Building/></Label>
     <select
       id="unidad"
       {...register('unidad')}
       className="w-[400px] p-2 border rounded"
     >
-      <option value="" disabled>Seleccione una unidad</option>
+      <option value="" disabled> Seleccione una unidad</option>
         <option value="DGS" >Direccion General de Secretaria </option>
       <option value="EDU">Educacion</option>
             <option value="DNC">Direccin Nacional de Cultura</option>
