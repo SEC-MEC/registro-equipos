@@ -77,7 +77,6 @@ export default function Component () {
       id_oficina: idOficina,
       id_tecnico: userId,
    }
-   console.log("la ofi",idOficina)
    mutation.mutate(pcInfoJson)
   }
 

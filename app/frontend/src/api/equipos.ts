@@ -33,7 +33,7 @@ export const generateEquipoName = async (nombre: string): Promise<string> => {
     }
 }
 
-export const getInfoPc = async (data: string) => {
+export const getInfoPc = async (data: { id_oficina: string; id_tecnico: any }) => {
     try {
         const res = await clienteAxios.post("/pcInfo", data)
         return res.data
