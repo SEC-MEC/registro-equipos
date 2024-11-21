@@ -80,6 +80,7 @@ const RegisterForm = () => {
   }
   })
 
+
   const onSubmit = (data: any) => {
     try {
       const oficinaData = JSON.parse(data.oficina);
@@ -97,7 +98,7 @@ const RegisterForm = () => {
         dominio: data.dominio ? true : false,
         id_tecnico: userId, 
       };
-
+      
       handleGenerateName(dataJson)
     } catch (error) {
       console.log(error)
@@ -151,6 +152,7 @@ const RegisterForm = () => {
             <div className='flex items-center gap-2 justify-between'>
             <AlertDescription className=' '>Desea asignarle este nombre?</AlertDescription>
             <Button onClick={handleCreateEquipo}>Confirmar nombre</Button>
+            <Button onClick={() => setGeneratedName('')}>Cancelar</Button>
                         </div>
                       </Alert>
                     )

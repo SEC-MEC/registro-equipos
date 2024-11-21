@@ -1,4 +1,3 @@
-import { connect } from "http2";
 import prisma from "../../../config/db.js";
 import os from 'os';
 import si from 'systeminformation';
@@ -13,6 +12,20 @@ export const existPcName = async(req, res) => {
         if(result){
             return res.json({exist: true});
         }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const createName = async(req, res) => {
+    const {nombre} = req.body;
+    try {
+        const result = await prisma.equipo.create({
+            data:{
+                nombre: nombre
+            }
+        })
+        return res.json({success: "Nombre creado con éxito", result})
     } catch (error) {
         console.log(error)
     }

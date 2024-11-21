@@ -43,6 +43,16 @@ export const getInfoPc = async (data: { id_oficina: string; id_tecnico: any }) =
     }
 }
 
+export const createName = async (data: { nombre: string }) => {
+    try {
+        const res = await clienteAxios.post("/create-name", data)
+        return res.data
+    } catch (error: any) {
+        console.error("Error al generar el nombre del equipo:", error);
+        throw error.response ? error.response.data : new Error("Error al generar el nombre del equipo");
+    }
+}
+
 export const getOficinas = async () => {
     try {
         const res = await clienteAxios.get('/oficinas')
