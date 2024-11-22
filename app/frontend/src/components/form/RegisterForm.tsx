@@ -286,7 +286,7 @@ const RegisterForm = () => {
       <option value="EDU">Educacion</option>
             <option value="DNC">Direccion Nacional de Cultura</option>
      <option value="PECA">PECA</option>
-     <option value="DGREC">Direccion Nacional de Registro Civil</option>
+     <option value="DNREC">Direccion Nacional de Registro Civil</option>
     </select>
 
   </div>
