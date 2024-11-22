@@ -9,22 +9,25 @@ dotenv.config()
 
 export const registerService = async (req, res) => {
 
-    const {username, password} = req.body;
+    const {nombre,apellido,  pass, usuario, es_admin } = req.body;
     try {
-        const existUser = await prisma.user.findFirst({
+        const existUser = await prisma.tecnico.findFirst({
             where:{
-                username:username
+                usuario: usuario
             }
         })
         if(existUser){
             return res.json({error: "Usuario ya existe"})
         }
         const salt = bcrypt.genSaltSync(10);
-        const hashPassword = bcrypt.hashSync(password, salt)
-        const user = await prisma.user.create({
+        const hashPassword = bcrypt.hashSync(pass, salt)
+        const user = await prisma.tecnico.create({
             data:{
-                username: username,
-                password: hashPassword
+                nombre: nombre,
+                apellido: apellido,
+                pass: hashPassword,
+                usuario: usuario,
+                es_admin: es_admin
             }
         })
         return res.json({success: "Usuario creado con éxito", user})

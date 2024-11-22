@@ -22,7 +22,10 @@ export const loginService = async (req, res) => {
   const token = jwt.sign({ 
   id: existUser.id,
   usuario: existUser.usuario,
-  pass: existUser.pass
+  pass: existUser.pass,
+  nombre: existUser.nombre,
+  apellido: existUser.apellido,
+  es_admin: existUser.es_admin
   },
   process.env.SECRET_KEY , 
   { expiresIn: '12h' });
@@ -57,6 +60,9 @@ export const authService = async (req, res) => {
   res.status(200).json({
       id: userToken.id,
       usuario: userToken.usuario,
+      nombre: userToken.nombre,
+      apellido: userToken.apellido,
+        es_admin: userToken.es_admin
   })
   } catch (error) {
       if (error instanceof jwt.JsonWebTokenError) {
