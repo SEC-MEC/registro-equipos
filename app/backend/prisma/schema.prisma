@@ -27,6 +27,7 @@ model equipo {
   equipo_app     equipo_app[]
   equipo_usuario equipo_usuario[]
   modificado     modificado[]
+
   @@index([id_oficina], map: "id_oficina")
 }
 
@@ -74,7 +75,7 @@ model oficina {
 }
 
 model tecnico {
-  id         Int          @id @default(autoincrement()) 
+  id         Int          @id @default(autoincrement())
   nombre     String       @db.VarChar(20)
   apellido   String       @db.VarChar(20)
   usuario    String       @db.VarChar(20)
@@ -97,4 +98,22 @@ model usuario {
   usr            String           @db.VarChar(30)
   interno        Int?
   equipo_usuario equipo_usuario[]
+}
+
+model VistaEquipos {
+  id_equipo Int @id
+  nombre_pc String
+  nro_serie String
+  id_inventario String?
+  tipo String
+  oficina String
+  piso Int
+  UE String
+  observaciones String?
+  dominio Boolean
+  last_update DateTime?
+  Tecnico String?
+  Usuario Int?
+
+  @@map("vista")
 }

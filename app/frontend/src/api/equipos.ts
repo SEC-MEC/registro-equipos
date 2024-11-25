@@ -62,9 +62,18 @@ export const getOficinas = async () => {
     }
 }
 
+export const getAplicacionesById = async (id: string) => {
+    try {
+        const res = await clienteAxios.get(`/aplicaciones/${id}`)
+        return res.data
+    } catch (error) {
+        console.log("Error en la obtencion de aplicaciones: ", error)
+    }
+}
+
 export const getAplicaciones = async () => {
     try {
-        const res = await clienteAxios.get('/aplicaciones')
+        const res = await clienteAxios.get(`/aplicaciones`)
         return res.data
     } catch (error) {
         console.log("Error en la obtencion de aplicaciones: ", error)

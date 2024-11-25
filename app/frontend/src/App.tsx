@@ -6,6 +6,7 @@ import 'react-toastify/ReactToastify.css';
 import {ProtectedRoute} from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import RegisterPage from "./pages/RegisterPage";
+import ItemProfile from "./components/Items/ItemProfile";
 
 
 
@@ -21,6 +22,7 @@ const AppContent = () => {
       <Route element={<ProtectedRoute isAllowed={isAuth} />}>
       <Route path="/auth" element={<Dashboard />} />
       <Route path="/registro" element={<RegisterPage />} />
+      <Route path="/aplicaciones/:id" element={<ItemProfile/> }/>
       </Route>
 
     </Routes>

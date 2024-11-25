@@ -5,46 +5,31 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search } from 'lucide-react'
-import { getEquipos, getInfoPc, getOficinas } from '@/api/equipos'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { Link } from 'react-router-dom'
+import { getEquipos } from '@/api/equipos'
+import {  useQuery } from '@tanstack/react-query'
+
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { useAuthStore } from '@/context/store'
-import { toast } from 'sonner'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTrigger } from '../ui/dialog'
+import { Link } from 'react-router-dom'
 
 
-interface Ue {
-  id: number;
-  nombre: string;
-}
-
-interface Oficina {
-  id: number;
-  nombre: string;
-  piso: number;
-  ue: Ue;
-}
-
-interface Modificado {
-  fecha: string;
-}
 
 interface Item {
   id_equipo: number;
-  nombre: string;
+  nombre_pc: string;
   id_oficina: number | null;
   id_apps: number | null;
-  id_tecnico: number | null;
+  tecnico: string | null;
   nro_serie: string;
   id_usuario: number | null;
   id_inventario: string;
   tipo: string;
   observaciones: string;
   dominio: boolean;
-  oficina: Oficina;
-  modificado: Modificado;
+  oficina: string;
+  UE: string;
+  last_update: string;
+  piso: number;
 }
 
 export default function Component () {
@@ -52,38 +37,13 @@ export default function Component () {
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
   const [filteredData, setFilteredData] = useState<Item[]>([])
-  const [idOficina, setIdOficina] = useState('')
+
 
   const { data, isLoading, isError } = useQuery<Item[]>({
     queryKey: ['items'],
     queryFn: () => getEquipos()
   })
 
-  const profile = useAuthStore((state) => state.profile)
-  const userId = profile?.data.id
-
-  const mutation = useMutation({
-    mutationFn: getInfoPc,
-    onSuccess: (success: any) => {
-      toast(success.success || success.message)
-    },
-    onError: (error: any) => {
-      toast(error.info || error.message)
-  }})
-
-  const handlePcInfo = async () => {
-   if(!userId) return <div><p>El tecnico no se encuentra</p></div>
-   const pcInfoJson = {
-      id_oficina: idOficina,
-      id_tecnico: userId,
-   }
-   mutation.mutate(pcInfoJson)
-  }
-
-  const { data: oficinas, isLoading: isLoadingOficinas } = useQuery({
-    queryKey: ['oficinas'],
-    queryFn: () => getOficinas(),
-  })
 
   useEffect(() => {
     if (data) {
@@ -122,37 +82,7 @@ export default function Component () {
            <h1 className="text-3xl font-bold text-zinc-800">Inventario de Equipos</h1>
            <div className='flex items-center gap-2'>
               <Link to='/registro' className='px-3 py-1 rounded-sm w-64 text-center bg-zinc-800 text-white font-semibold hover:bg-zinc-700'>Registrar nuevo equipo</Link>
-              <Dialog>
-                <DialogTrigger>
-                  <Button>Registrar este equipo</Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader className='font-semibold text-xl'>Registrar equipo</DialogHeader>
-                  <DialogDescription>
-                 
-                    <form>
-                      <select 
-                        className='px-3 py-1 border shadow-xl rounded-md text-black'
-                        onChange={(e) => setIdOficina(e.target.value)}
-                        value={idOficina}
-                        required
-                      >
-                        <option value="" disabled>Selecciona una oficina</option>
-                        {isLoadingOficinas && <option value="" disabled>Cargando oficinas...</option>}
-                        {oficinas?.map((oficina: Oficina) => (
-                        <option key={oficina.id} value={oficina.id}>{oficina.nombre}</option>
-                        ))}
-                      </select>
-                      <DialogFooter>
-                        <Button type="submit" onClick={handlePcInfo} className=''>Registrar</Button>
-                      </DialogFooter>
-                    </form>
-             
-    
-                  </DialogDescription>
-               
-                </DialogContent>
-              </Dialog>
+
            </div>
          
         </aside>
@@ -177,34 +107,39 @@ export default function Component () {
                   <TableHead className="bg-zinc-50 text-zinc-600">Tipo</TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">Piso</TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">Oficina</TableHead>
-                  <TableHead className="bg-zinc-50 text-zinc-600">UE</TableHead>
+                  <TableHead className="bg-zinc-50 text-zinc-600">Unidad Ejecutora</TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">ID Inventario</TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">Usuarios del PC</TableHead> 
                   <TableHead className="bg-zinc-50 text-zinc-600">Fecha</TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">Dominio</TableHead>
+                  <TableHead className="bg-zinc-50 text-zinc-600">Acciones</TableHead>
+                  <TableHead className="bg-zinc-50 text-zinc-600">Modificar</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 <AnimatePresence>
                   {currentData.map((item) => (
                     <motion.tr
-                      key={`${item.id_equipo}-${item.nro_serie}-${item.oficina?.nombre}`}
+                      key={`${item.id_equipo}-${item.nro_serie}-${item.oficina}`}
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.2 }}
                       className="hover:bg-zinc-50 transition-colors"
                     >
-                      <TableCell className="font-medium">{item.nombre}</TableCell>
+                      <TableCell className="font-medium">{item.nombre_pc}</TableCell>
                       <TableCell>{item.nro_serie}</TableCell>
                       <TableCell>{item.tipo}</TableCell>
-                      <TableCell>{item.oficina?.piso}</TableCell>
-                      <TableCell>{item.oficina?.nombre}</TableCell>
-                      <TableCell>{item.oficina?.ue?.nombre}</TableCell>
+                      <TableCell>{item.piso}</TableCell>
+                      <TableCell>{item.oficina}</TableCell>
+                      <TableCell>{item.UE}</TableCell>
                       <TableCell>{item.id_inventario}</TableCell>
                       <TableCell>{item.observaciones}</TableCell>
-                      <TableCell>{item.modificado?.fecha ? format(new Date(item.modificado?.fecha), 'dd/MM/yyyy', { locale: es }) : ''}</TableCell>
+                      <TableCell>{item.last_update? format(new Date(item.last_update), 'dd/MM/yyyy', { locale: es }) : 'Sin fecha'}</TableCell>
                       <TableCell>{item.dominio ? 'Sí' : 'No'}</TableCell>
+                      <TableCell>
+                        <Link to={`/aplicaciones/${item.id_equipo}`} className="text-blue-500 hover:underline">Ver más</Link>
+                        </TableCell>
                     </motion.tr>
                   ))}
                 </AnimatePresence>

@@ -77,7 +77,7 @@ export const createEquipo = async (req, res) => {
         dominio,
         id_oficina,
         id_tecnico,
-        // aplicaciones, //array de objetos
+        aplicaciones,
     } = req.body;
 
     try {
@@ -104,14 +104,21 @@ export const createEquipo = async (req, res) => {
               },
             });
           
-            // if (aplicaciones && aplicaciones.length > 0) {
-            //   await tx.equipo_app.createMany({
-            //     data: aplicaciones.map((app) => ({
-            //       id_equipo: nuevoEquipo.id,
-            //       id_app: app.id_app
-            //     })),
-            //   });
-            // }
+            if (aplicaciones && aplicaciones.length > 0) {
+              await tx.equipo_app.createMany({
+                data: aplicaciones.map((idApp) => {
+                    const parsedId = parseInt(idApp, 10);
+                    if (isNaN(parsedId)) {
+                        throw new Error(`El ID de la aplicación "${idApp}" no es un número válido.`);
+                    }
+                    return{
+                        id_equipo: nuevoEquipo.id,
+                        id_app: parsedId
+                    }
+                  
+                }),
+              });
+            }
           
             return nuevoEquipo;
           });
