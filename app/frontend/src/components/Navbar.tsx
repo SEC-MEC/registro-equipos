@@ -71,7 +71,9 @@ const  Navbar = ({className}: NavbarProps)  => {
               {!isCollapsed && <span>{item.label}</span>}
             </Button>
           ))}
+          {
 
+          }
           
         </nav>
       </ScrollArea>

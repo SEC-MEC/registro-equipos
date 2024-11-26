@@ -31,3 +31,12 @@ export const auth = async () => {
         console.log("Error en la autenticacion: ", error)
     }
 }
+
+export const changePassword = async (data: {oldPass: string, newPass: string}) => {
+    try {
+        const res = await clienteAxios.put('/changePassowrd', data)
+        return res
+    } catch (error) {
+        console.log("Error en el cambio de contraseña: ", error)
+    }
+}

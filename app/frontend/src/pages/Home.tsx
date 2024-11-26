@@ -1,35 +1,28 @@
+'use client'
+import { BackgroundBeams } from "@/components/ui/background-beams"
 import LoginForm from "../components/LoginForm"
-import {motion} from 'framer-motion'
-import { AuroraBackground } from "@/components/ui/aurora-background"
+
+
 
 const Home = () => {
-
   return (
-    <div className="w-full min-h-screen relative overflow-hidden">
-      <AuroraBackground>
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            delay: 0.3,
-            duration: 0.8,
-            ease: "easeInOut",
-          }}
-          className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4"
-        >
-          <div className="w-full max-w-md">
-            <LoginForm />
-          </div>
-        </motion.div>
-      </AuroraBackground>
+          <div className="min-h-screen w-full bg-neutral-950 relative flex flex-col items-center">
+      <div className="absolute top-0 w-full h-96">
+        <BackgroundBeams />
+      </div>
+      <div className="relative z-10 w-full max-w-2xl mx-auto p-4 pt-32 flex flex-col items-center">
+        <h1 className="text-3xl md:text-7xl bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-600 text-center font-sans font-bold mb-6">
+          Inventario MEC
+        </h1>
+        <p className="text-white max-w-lg mx-auto my-2 text-sm text-center">
+          Inicia sesión para acceder al inventario de todos los equipos.
+        </p>
+        <LoginForm/>
+      </div>
     </div>
-
-   
-
-     
-
 
   )
 }
 
 export default Home
+
