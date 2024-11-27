@@ -1,8 +1,9 @@
 
 
 import { Router } from "express";
-import { createEquipo, createName, generateEquipoName, getInfoEquipo } from "../controllers/equipos/post/postEquipos.controller.js";
+import { createEquipo, createName, generateEquipoName, getInfoEquipo, updateEquipos } from "../controllers/equipos/post/postEquipos.controller.js";
 import { getAplicaciones, getAplicacionesById, getEquipos, getOficinas } from "../controllers/equipos/get/getEquipos.controller.js";
+import { deleteAplicaciones, updateApp } from "../controllers/equipos/aplicaciones/aplicaciones.controller.js";
 
 
 const equipoRouter = Router();
@@ -16,5 +17,9 @@ equipoRouter.get("/aplicaciones", getAplicaciones)
 equipoRouter.post("/pcInfo", getInfoEquipo)
 equipoRouter.post("/generate-name", generateEquipoName);
 equipoRouter.post("/create-name", createName);
+
+equipoRouter.put("/update/:id", updateEquipos)
+equipoRouter.put("/update-app/:id", updateApp)
+equipoRouter.delete("/delete-app/:id/:id_app", deleteAplicaciones)
 
 export default equipoRouter;

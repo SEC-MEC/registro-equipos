@@ -11,6 +11,7 @@ import {  useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Link } from 'react-router-dom'
+// import UpdateDialog from '../dialog/UpdateDialog'
 
 
 
@@ -139,6 +140,9 @@ export default function Component () {
                       <TableCell>{item.dominio ? 'Sí' : 'No'}</TableCell>
                       <TableCell>
                         <Link to={`/aplicaciones/${item.id_equipo}`} className="text-blue-500 hover:underline">Ver más</Link>
+                        </TableCell>
+                        <TableCell>
+                        {/* <UpdateDialog id={item.id_equipo} /> */}
                         </TableCell>
                     </motion.tr>
                   ))}
