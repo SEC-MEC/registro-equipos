@@ -11,6 +11,7 @@ import {  useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Link } from 'react-router-dom'
+// import { generatePDF } from '@/utils/generatePDF'
 // import UpdateDialog from '../dialog/UpdateDialog'
 
 
@@ -20,7 +21,8 @@ interface Item {
   nombre_pc: string;
   id_oficina: number | null;
   id_apps: number | null;
-  tecnico: string | null;
+  Usuario: string | null;
+  Tecnico: string | null;
   nro_serie: string;
   id_usuario: number | null;
   id_inventario: string;
@@ -110,11 +112,13 @@ export default function Component () {
                   <TableHead className="bg-zinc-50 text-zinc-600">Oficina</TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">Unidad Ejecutora</TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">ID Inventario</TableHead>
-                  <TableHead className="bg-zinc-50 text-zinc-600">Usuarios del PC</TableHead> 
+                  <TableHead className="bg-zinc-50 text-zinc-600">Comentarios</TableHead> 
                   <TableHead className="bg-zinc-50 text-zinc-600">Fecha</TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">Dominio</TableHead>
+                  <TableHead className="bg-zinc-50 text-zinc-600">Tecnico asignado</TableHead> 
+                  <TableHead className="bg-zinc-50 text-zinc-600">Usuario</TableHead> 
                   <TableHead className="bg-zinc-50 text-zinc-600">Acciones</TableHead>
-                  <TableHead className="bg-zinc-50 text-zinc-600">Modificar</TableHead>
+                  <TableHead className="bg-zinc-50 text-zinc-600">Exportar PDF</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -136,14 +140,17 @@ export default function Component () {
                       <TableCell>{item.UE}</TableCell>
                       <TableCell>{item.id_inventario}</TableCell>
                       <TableCell>{item.observaciones}</TableCell>
-                      <TableCell>{item.last_update? format(new Date(item.last_update), 'dd/MM/yyyy', { locale: es }) : 'Sin fecha'}</TableCell>
+                      <TableCell>{item.last_update? format(new Date(item.last_update), 'dd/MM/yyyy', { locale: es }) : <p className='text-gray-400'>N/A</p>}</TableCell>
                       <TableCell>{item.dominio ? 'Sí' : 'No'}</TableCell>
+                      <TableCell>{item.Tecnico ? item.Tecnico : <p className='text-gray-400'>N/A</p> }</TableCell>
+                      <TableCell>{item.Usuario ? item.Usuario : <p className='text-gray-400'>N/A</p> }</TableCell>
                       <TableCell>
-                        <Link to={`/aplicaciones/${item.id_equipo}`} className="text-blue-500 hover:underline">Ver más</Link>
+                        <Link to={`/aplicaciones/${item.id_equipo}`} className="text-blue-500 hover:underline font-semibold">Ver más</Link>
                         </TableCell>
-                        <TableCell>
-                        {/* <UpdateDialog id={item.id_equipo} /> */}
-                        </TableCell>
+                        {/* <TableCell>
+                          <Button onClick={generatePDF}>Generar</Button>
+                        </TableCell> */}
+                        
                     </motion.tr>
                   ))}
                 </AnimatePresence>

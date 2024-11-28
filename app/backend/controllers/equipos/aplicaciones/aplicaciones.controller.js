@@ -2,24 +2,6 @@ import prisma from "../../../config/db.js";
 
 
 
-export const updateEquipos = async (req, res) => {
-
-    const {id} = req.params;
-    const dataToUpdate = req.body;
-    try {
-        const equipos = await prisma.equipo.update({
-            where: {
-                id: parseInt(id)
-            },
-            data: dataToUpdate
-        })
-        return res.status(200).json(equipos);
-    } catch (error) {
-        console.log("Error en getEquipos: ", error)
-        return res.status(500).json({ error: "Error al actualizar el equipo" });
-    }
-    }
-
 
     export const updateApp = async (req, res) => {
         const {id} = req.params;
@@ -66,3 +48,6 @@ export const updateEquipos = async (req, res) => {
                 
             }
     }
+
+
+    

@@ -113,7 +113,7 @@ model VistaEquipos {
   dominio Boolean
   last_update DateTime?
   Tecnico String?
-  Usuario Int?
+  Usuario String?
 
   @@map("vista")
 }
