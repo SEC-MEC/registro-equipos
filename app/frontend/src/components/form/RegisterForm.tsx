@@ -101,6 +101,15 @@ const RegisterForm = () => {
         tipo: data.tipo,
         id_inventario:  data.id_inventario,
         dominio: data.dominio ? true : false,
+        equipo_usuario: {
+          create: {
+            usuario: {
+              create: {
+                nombre: data.nombre_usuario || "Sin usuario",
+              },
+            },
+          },
+        },
         id_tecnico: userId, 
         aplicaciones: selectedAplicaciones.map(app => app.id),
       };
@@ -306,6 +315,16 @@ const RegisterForm = () => {
                     placeholder="Observaciones.."
                     {...register('observaciones')}
                     className='resize-none'
+                  />
+                </div>
+              </CardContent>
+              <CardContent>
+                <div>
+                  <Label> Nombre del usuario para esta PC</Label>
+                  <Input
+                    id="nombre_usuario"
+                    placeholder="Nombre del usuario.."
+                    {...register('nombre_usuario')}
                   />
                 </div>
               </CardContent>

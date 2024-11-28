@@ -164,7 +164,16 @@ export const getInfoEquipo = async (req, res) => {
                     connect:{
                         id: parseInt(id_oficina)
                 },
-            },
+                 },
+                equipo_usuario:{
+                    create:{
+                        usuario:{
+                            create:{
+                                nombre: userName || "Sin usuario"
+                            }
+                        }
+                    }
+                },
                 modificado:{
                     create:{
                         id_tecnico: parseInt(id_tecnico),

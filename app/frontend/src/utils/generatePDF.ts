@@ -3,24 +3,21 @@ import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 
 
 interface EquipoPDF {
-    id_equipo: string;
+    id_equipo: number;
     nombre_pc: string;
     nro_serie: string;
-    id_inventario: string;
+    id_inventario: string | null;
     tipo: string;
-    oficina: string;
-    piso: string;
-    UE: string;
-    last_update: string;
-    Tecnico: string;
-    Usuario: string;
+    oficina: string | null;
+    piso: number | null;
+    UE: string | null;
+    last_update: string ;
+    Tecnico: string | null;
+    Usuario: string | null;
     dominio: boolean;
 }
 
-// interface Aplicacion {
-//     nombre: string;
-//     version: string;
-// }
+
 
 export async function generatePDF(equipo: EquipoPDF) {
   const pdfDoc = await PDFDocument.create();
@@ -62,7 +59,7 @@ export async function generatePDF(equipo: EquipoPDF) {
     color: rgb(0, 0, 0),
   });
 
-  const fechaFormateada = format(new Date(equipo.last_update), 'yyyy-MM-dd');
+  const fechaFormateada = equipo.last_update ? format(new Date(equipo.last_update), 'yyyy-MM-dd') : 'N/A';
 
   const data = [
     ["Nombre del PC", equipo.nombre_pc],
@@ -88,7 +85,7 @@ export async function generatePDF(equipo: EquipoPDF) {
       });
 
       // Dibujar texto de la celda
-      page.drawText(cell, {
+      page.drawText(cell ?? '', {
         x: x + cellPadding,
         y: y - lineHeight + cellPadding,
         size: textSize,
@@ -107,9 +104,8 @@ export async function generatePDF(equipo: EquipoPDF) {
     color: rgb(0, 0, 0),
   });
 
-//   if (Array.isArray(aplicaciones) && aplicaciones.length > 0) {
-//     aplicaciones.nombre
-//     .forEach((app: any, index: number) => {
+//   if (Array.isArray(aplicacion) && aplicacion.length > 0) {
+//     aplicacion.nombre.filter((app: any, index: number) => {
 //         page.drawText(`- ${app.aplicacion.nombre}`, {
 //           x: 70,
 //           y: appsTitleY - (index + 1) * lineHeight,

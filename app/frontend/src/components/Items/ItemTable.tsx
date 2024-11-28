@@ -11,7 +11,7 @@ import {  useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Link } from 'react-router-dom'
-// import { generatePDF } from '@/utils/generatePDF'
+import { generatePDF } from '@/utils/generatePDF'
 // import UpdateDialog from '../dialog/UpdateDialog'
 
 
@@ -147,9 +147,9 @@ export default function Component () {
                       <TableCell>
                         <Link to={`/aplicaciones/${item.id_equipo}`} className="text-blue-500 hover:underline font-semibold">Ver más</Link>
                         </TableCell>
-                        {/* <TableCell>
-                          <Button onClick={generatePDF}>Generar</Button>
-                        </TableCell> */}
+                        <TableCell>
+                          <Button onClick={() => generatePDF(item)}>Generar</Button>
+                        </TableCell>
                         
                     </motion.tr>
                   ))}
