@@ -15,6 +15,7 @@ interface EquipoPDF {
     Tecnico: string | null;
     Usuario: string | null;
     dominio: boolean;
+    aplicaciones: { nombre: string; version: string }[];
 }
 
 
@@ -96,33 +97,23 @@ export async function generatePDF(equipo: EquipoPDF) {
   });
 
   const appsTitleY = tableTop - data.length * cellHeight - 40;
-  page.drawText(`Aplicaciones Instaladas:`, {
+  page.drawText(``, {
     x: 50,
     y: appsTitleY,
     size: textSize,
     font,
     color: rgb(0, 0, 0),
   });
-
-//   if (Array.isArray(aplicacion) && aplicacion.length > 0) {
-//     aplicacion.nombre.filter((app: any, index: number) => {
-//         page.drawText(`- ${app.aplicacion.nombre}`, {
-//           x: 70,
-//           y: appsTitleY - (index + 1) * lineHeight,
-//           size: textSize,
-//           font,
-//           color: rgb(0, 0, 0),
-//         });
-//       });
-//   } else {
-//     page.drawText(`No hay aplicaciones instaladas.`, {
-//       x: 70,
-//       y: appsTitleY - lineHeight,
-//       size: textSize,
-//       font,
-//       color: rgb(0, 0, 0),
-//     });
-//   }
+  
+  equipo.aplicaciones.forEach((app, index) => {
+    page.drawText(`- ${app.nombre} ${app.version}`, {
+      x: 70,
+      y: appsTitleY - (index + 1) * lineHeight,
+      size: textSize,
+      font,
+      color: rgb(0, 0, 0),
+    });
+  });
 
   const pdfBytes = await pdfDoc.save();
   return pdfBytes;

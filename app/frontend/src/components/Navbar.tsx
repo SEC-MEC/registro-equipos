@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 
 import { useAuthStore } from '@/context/store'
+import { ChangePasswordDialog } from './dialog/ChangePasswordDialog'
 
 
 
@@ -65,19 +66,18 @@ const  Navbar = ({className}: NavbarProps)  => {
                 "justify-start gap-2 px-2", 
                 isCollapsed && "justify-center px-0"
               )}
-              onClick={() => navigate(item.href)}
-            >
+              onClick={() => navigate(item.href)}>
               <item.icon size={20} />
               {!isCollapsed && <span>{item.label}</span>}
             </Button>
           ))}
-          {
+          <div className=''>
+                      <ChangePasswordDialog />
+          </div>
 
-          }
-          
         </nav>
       </ScrollArea>
-
+          
       <div className="p-4 border-t border-zinc-200">
         <Button
           variant="ghost"

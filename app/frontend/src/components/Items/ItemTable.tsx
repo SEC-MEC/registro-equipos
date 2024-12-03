@@ -11,7 +11,8 @@ import {  useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Link } from 'react-router-dom'
-import { generatePDF } from '@/utils/generatePDF'
+import { downloadPDF, generatePDF } from '@/utils/generatePDF'
+import { useAuthStore } from '@/context/store'
 // import UpdateDialog from '../dialog/UpdateDialog'
 
 
@@ -47,6 +48,9 @@ export default function Component () {
     queryFn: () => getEquipos()
   })
 
+  const user = useAuthStore((state) => state.profile)
+  const isAdmin = user?.data.es_admin 
+  console.log('admin', isAdmin)
 
   useEffect(() => {
     if (data) {
@@ -77,6 +81,21 @@ export default function Component () {
   const goToPage = (page: number) => {
     setCurrentPage(Math.max(1, Math.min(page, totalPages)))
   }
+
+
+  const handleGeneratePDF = async (equipo: any) => {
+    try {
+      const equipoPDF = {
+        ...equipo,
+        last_update: equipo.last_update ? new Date(equipo.last_update).toISOString() : null,
+        aplicaciones: equipo.aplicaciones || [],
+      };
+      const pdfBytes = await generatePDF(equipoPDF as any);
+      downloadPDF(pdfBytes, `Equipo_${equipo.nombre_pc}.pdf`);
+    } catch (error) {
+      console.error('Error al generar el PDF:', error);
+    }
+  };
 
   return (
     <div className="p-4 md:p-8 bg-zinc-100 min-h-screen">
@@ -148,8 +167,14 @@ export default function Component () {
                         <Link to={`/aplicaciones/${item.id_equipo}`} className="text-blue-500 hover:underline font-semibold">Ver más</Link>
                         </TableCell>
                         <TableCell>
-                          <Button onClick={() => generatePDF(item)}>Generar</Button>
+                          <Button onClick={() => handleGeneratePDF(item)}>Generar</Button>
                         </TableCell>
+                    {/* <TableCell>
+                      {
+                        isAdmin &&
+                        <p>El admin con permisos</p>
+                      }
+                    </TableCell> */}
                         
                     </motion.tr>
                   ))}
