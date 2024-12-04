@@ -13,6 +13,10 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { KeyRound } from 'lucide-react';
+import { useMutation } from "@tanstack/react-query"
+import { changePassword } from "@/api/auth"
+import { useAuthStore } from "@/context/store"
+import { toast } from "sonner"
 
 export function ChangePasswordDialog() {
   const [open, setOpen] = useState(false)
@@ -20,6 +24,24 @@ export function ChangePasswordDialog() {
   const [confirmPassword, setConfirmPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
+
+  const profile = useAuthStore((state) => state.profile)
+  const userId = profile.data.id
+
+
+  const mutation = useMutation({
+    mutationFn: (data: any) => changePassword(userId, data),
+    onSuccess: (data: any) => {
+      toast("Se cambio la contraseña correctamente", {
+        description: data.success,
+      })
+    },
+    onError: (data: any) => {
+      toast("Error en el cambio de la contraseña", {
+        description: data.error
+      })
+    }
+  })
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,8 +53,8 @@ export function ChangePasswordDialog() {
       setError("La contraseña debe tener al menos 8 caracteres")
       return
     }
-    // Aquí iría la lógica para cambiar la contraseña
-    console.log("Contraseña cambiada:", newPassword)
+  
+    mutation.mutate(newPassword)
     setOpen(false)
     setNewPassword("")
     setConfirmPassword("")
@@ -87,7 +109,7 @@ export function ChangePasswordDialog() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </div>
-            {error && <p className="text-sm text-red-500">{error}</p>}
+            {error && <p className="text-xl text-red-500">{error}</p>}
           </div>
           <DialogFooter>
             <Button type="submit" className="w-full">

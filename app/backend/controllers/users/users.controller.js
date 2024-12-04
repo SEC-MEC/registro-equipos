@@ -52,20 +52,20 @@ export const changePasswordService = async(req,res) => {
                 id: parseInt(id)
             }
         })
-        const passwordMatch = await bcrypt.compare(pass, isUser.pass);
-          if (!passwordMatch) {
-    return res.json({ error: 'No se encontro la contrasena actual' });
-  }
+//         const passwordMatch = await bcrypt.compare(pass, isUser.pass);
+//           if (!passwordMatch) {
+//     return res.json({ error: 'No se encontro la contrasena actual' });
+//   }
 
     
           const salt = bcrypt.genSaltSync(10);
           const hashPassword =  bcrypt.hashSync(pass, salt)
-          await prisma.user.update({
+          await prisma.tecnico.update({
               where:{
                   id: parseInt(id)
               },
           data:{
-              password: hashPassword
+              pass: hashPassword
           }
       })
       res.json({success: "Contraseña actualizada con éxito"})
