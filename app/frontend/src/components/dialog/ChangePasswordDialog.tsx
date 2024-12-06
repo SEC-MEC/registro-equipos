@@ -41,7 +41,7 @@ export function ChangePasswordDialog() {
         description: data.error
       })
     }
-  })
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -56,9 +56,9 @@ export function ChangePasswordDialog() {
   
     mutation.mutate(newPassword)
     setOpen(false)
-    setNewPassword("")
-    setConfirmPassword("")
-    setError("")
+    setNewPassword("");
+    setConfirmPassword("");
+    setError("");
   }
 
   return (
