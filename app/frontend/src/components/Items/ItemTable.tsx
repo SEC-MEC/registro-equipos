@@ -5,16 +5,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search } from 'lucide-react'
-import { getEquipos } from '@/api/equipos'
-import {  useQuery } from '@tanstack/react-query'
-
+import { deleteEquipo, getEquipos } from '@/api/equipos'
+import {  useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Link } from 'react-router-dom'
 import { downloadPDF, generatePDF } from '@/utils/generatePDF'
 import { useAuthStore } from '@/context/store'
-// import UpdateDialog from '../dialog/UpdateDialog'
-
+import { Download } from 'lucide-react';
+import UpdateDialog from '../dialog/UpdateDialog'
+import { toast } from 'sonner'
+import { DeleteConfirmDialog } from '../dialog/DeleteConfirmDialog'
 
 
 interface Item {
@@ -44,13 +45,35 @@ export default function Component () {
 
 
   const { data, isLoading, isError } = useQuery<Item[]>({
-    queryKey: ['items'],
+    queryKey: ['equipos'],
     queryFn: () => getEquipos()
   })
 
+  const queryClient = useQueryClient();
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => deleteEquipo(id),
+    onSuccess: (data: any) => {
+      queryClient.invalidateQueries({ queryKey: ['equipos'] })
+      toast("Equipo eliminado correctamente", {
+        description: data.message,
+      })
+    },
+
+    onError: (data: any) => {
+      toast("Error al eliminar el equipo", {
+        description: data.error
+      })
+    }
+  })
+
+  const handleDelete = async (id: number) => {
+      deleteMutation.mutate(id)
+  }
+
   const user = useAuthStore((state) => state.profile)
   const isAdmin = user?.data.es_admin 
-  console.log('admin', isAdmin)
+
 
   useEffect(() => {
     if (data) {
@@ -97,6 +120,7 @@ export default function Component () {
     }
   };
 
+
   return (
     <div className="p-4 md:p-8 bg-zinc-100 min-h-screen">
       <div className="max-w-7xl mx-auto space-y-8 ">
@@ -104,7 +128,6 @@ export default function Component () {
            <h1 className="text-3xl font-bold text-zinc-800">Inventario de Equipos</h1>
            <div className='flex items-center gap-2'>
               <Link to='/registro' className='px-3 py-1 rounded-sm w-64 text-center bg-zinc-800 text-white font-semibold hover:bg-zinc-700'>Registrar nuevo equipo</Link>
-
            </div>
          
         </aside>
@@ -136,21 +159,21 @@ export default function Component () {
                   <TableHead className="bg-zinc-50 text-zinc-600">Dominio</TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">Tecnico asignado</TableHead> 
                   <TableHead className="bg-zinc-50 text-zinc-600">Usuario</TableHead> 
-                  <TableHead className="bg-zinc-50 text-zinc-600">Acciones</TableHead>
+                  <TableHead className="bg-zinc-50 text-zinc-600">App instaladas</TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">Exportar PDF</TableHead>
+                  { isAdmin && <TableHead className="bg-zinc-50 text-zinc-600">Editar/Eliminar</TableHead >}
                 </TableRow>
               </TableHeader>
               <TableBody>
                 <AnimatePresence>
-                  {currentData.map((item) => (
+                  {currentData.map((item, index) => (
                     <motion.tr
-                      key={`${item.id_equipo}-${item.nro_serie}-${item.oficina}`}
+                      key={`${item.id_equipo}-${item.nro_serie}-${item.oficina}-${index}`}
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.2 }}
-                      className="hover:bg-zinc-50 transition-colors"
-                    >
+                      className="hover:bg-zinc-50 transition-colors">
                       <TableCell className="font-medium">{item.nombre_pc}</TableCell>
                       <TableCell>{item.nro_serie}</TableCell>
                       <TableCell>{item.tipo}</TableCell>
@@ -167,14 +190,18 @@ export default function Component () {
                         <Link to={`/aplicaciones/${item.id_equipo}`} className="text-blue-500 hover:underline font-semibold">Ver más</Link>
                         </TableCell>
                         <TableCell>
-                          <Button onClick={() => handleGeneratePDF(item)}>Generar</Button>
+                          <Button onClick={() => handleGeneratePDF(item)}><Download/></Button>
                         </TableCell>
-                    {/* <TableCell>
+                    <TableCell>
                       {
                         isAdmin &&
-                        <p>El admin con permisos</p>
+                        <div className='flex gap-2'>
+                           <UpdateDialog id={item.id_equipo}/>
+                          <DeleteConfirmDialog onConfirm={() => handleDelete(item.id_equipo)} />
+                        </div>
+                       
                       }
-                    </TableCell> */}
+                    </TableCell>
                         
                     </motion.tr>
                   ))}
