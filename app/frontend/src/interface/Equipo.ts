@@ -40,3 +40,12 @@ export interface Aplicacion {
   nombre: string;
   version: string;
 }
+
+
+export interface ChangePasswordData {
+  pass: string;
+}
+
+export interface UpdateEquipoData {
+  dataToUpdate: string;
+}

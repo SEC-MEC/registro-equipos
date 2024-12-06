@@ -1,3 +1,4 @@
+import { ChangePasswordData } from "@/interface/Equipo";
 import clienteAxios from "../config/axios";
 
 
@@ -32,7 +33,7 @@ export const auth = async () => {
     }
 }
 
-export const changePassword = async (id:string , data: any) => {
+export const changePassword = async (id:string , data: ChangePasswordData) => {
     try {
         const res = await clienteAxios.put(`/changePassword/${id}`, data)
         return res

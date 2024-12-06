@@ -192,13 +192,18 @@ export const getInfoEquipo = async (req, res) => {
 export const updateEquipos = async (req, res) => {
 
     const {id} = req.params;
-    const dataToUpdate = req.body;
+    const {dataToUpdate} = req.body;
     try {
+
+        const filteredData = Object.fromEntries(
+            Object.entries(dataToUpdate).filter(([_, v]) => v !== "" && v !== undefined)
+          );
+
         const equipos = await prisma.equipo.update({
             where: {
                 id: parseInt(id)
             },
-            data: dataToUpdate
+            data: filteredData
         })
         return res.status(200).json(equipos);
     } catch (error) {

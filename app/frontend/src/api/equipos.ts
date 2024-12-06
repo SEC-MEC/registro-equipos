@@ -1,4 +1,5 @@
 
+import { UpdateEquipoData } from "@/interface/Equipo";
 import clienteAxios from "../config/axios";
 
 
@@ -77,5 +78,25 @@ export const getAplicaciones = async () => {
         return res.data
     } catch (error) {
         console.log("Error en la obtencion de aplicaciones: ", error)
+    }
+}
+
+
+export const updateEquipo = async (id: number, data: UpdateEquipoData) => {
+    try {
+        const res = await clienteAxios.put(`/update/${id}`, data)
+        return res.data
+    } catch (error: any) {
+        console.log("Error en la actualizacion de equipos: ", error)
+    }
+}
+
+
+export const deleteEquipo = async(id: number) => {
+    try {
+        const res = await clienteAxios.delete(`/delete/${id}`)
+        return res.data
+    } catch (error: any) {
+        console.log("Error en la eliminacion de equipos: ", error)
     }
 }

@@ -29,6 +29,8 @@ export function ChangePasswordDialog() {
   const userId = profile.data.id
 
 
+
+
   const mutation = useMutation({
     mutationFn: (data: any) => changePassword(userId, data),
     onSuccess: (data: any) => {
@@ -54,7 +56,7 @@ export function ChangePasswordDialog() {
       return
     }
   
-    mutation.mutate(newPassword)
+    mutation.mutate({pass: newPassword})
     setOpen(false)
     setNewPassword("")
     setConfirmPassword("")

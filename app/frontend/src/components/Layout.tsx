@@ -11,7 +11,7 @@ const Layout = ({ children }: LayoutProps) => {
     <div className="flex min-h-screen bg-zinc-50">
     <Navbar />
     <main className="flex-grow overflow-auto">
-      {children}
+              {children}
     </main>
   </div>
       
