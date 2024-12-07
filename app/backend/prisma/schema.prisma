@@ -114,6 +114,5 @@ model VistaEquipos {
   last_update DateTime?
   Tecnico String?
   Usuario String?
-
   @@map("vista")
 }
