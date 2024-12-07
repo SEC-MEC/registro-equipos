@@ -25,7 +25,7 @@ app.use("/", equipoRouter)
 
 
 app.get("/", (req,res) => {
-    res.json("======Index=====")
+    res.json("====Index===")
 
 })
 
