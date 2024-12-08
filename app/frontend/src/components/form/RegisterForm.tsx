@@ -35,7 +35,18 @@ const RegisterForm = () => {
  const profile = useAuthStore(state => state.profile)
   const userId = profile.data.id
 
-  const { register, handleSubmit, } = useForm({
+  const { register, handleSubmit, setValue, getValues } = useForm({
+    defaultValues: {
+      nombre: '',
+      nro_serie: '',
+      tipo: 'PC',
+      id_inventario: '',
+      dominio: false,
+      observaciones: '',
+      nombre_usuario: '',
+      oficina: '',
+      unidad: ''
+    }
   })
 
   const { data: oficinas, isLoading } = useQuery({
@@ -57,6 +68,7 @@ const RegisterForm = () => {
     mutationFn: generateEquipoName, 
     onSuccess: (generatedName: any) => {
       setGeneratedName(generatedName);
+      setValue('nombre', generatedName);
     },
     onError: (error: any) => {
       toast("Error al generar el nombre del equipo", {
@@ -94,7 +106,7 @@ const RegisterForm = () => {
       const generarNombre = `${data.unidad}-${data.tipo}-${oficinaNomenclatura}`;
 
       const dataJson = {
-        nombre: data.nombre ? data.nombre : generarNombre,
+        nombre: getValues('nombre') || generarNombre,
         id_oficina: idOficina,
         observaciones: data.observaciones,
         nro_serie: data.nro_serie,
@@ -113,7 +125,7 @@ const RegisterForm = () => {
         id_tecnico: userId, 
         aplicaciones: selectedAplicaciones.map(app => app.id),
       };
-
+      console.log(dataJson)
       handleGenerateName(dataJson)
     } catch (error) {
       console.log(error)
@@ -131,7 +143,8 @@ const RegisterForm = () => {
 
   const handleCreateEquipo = () => {
     if (isCreateEquipoInput(data)) {
-      createEquipoMutation.mutate({ ...(data as CreateEquipoInput), nombre: generatedName });
+      const currentNombre = getValues('nombre');
+      createEquipoMutation.mutate({ ...(data as CreateEquipoInput), nombre: currentNombre });
     } else {
       toast("Error al registrar el equipo", {
         description: "Datos inválidos",
@@ -161,13 +174,22 @@ const RegisterForm = () => {
             <Alert className='grid grid-cols-1 p-3 py-4 space-y-2'>
             <AlertTitle className='text-start font-semibold'>
             {
-             generatedName
+                <CardContent className=' flex flex-col  space-y-5  p-4 items-center'>
+                  <AlertDescription className='text-center text-xl '>Nombre del equipo</AlertDescription>
+                        <Input
+                          type="text"
+                          id='nombre'
+                          defaultValue={generatedName}
+                          className='' 
+                          {...register('nombre')}
+                          />
+                     </CardContent>
+             
             }
             </AlertTitle>
-            <div className='flex items-center gap-2 justify-between'>
-            <AlertDescription className=' '>Desea asignarle este nombre?</AlertDescription>
+            <div className='flex items-center  justify-center'>
+
             <Button onClick={handleCreateEquipo}>Confirmar nombre</Button>
-            <Button onClick={() => setGeneratedName('')}>Cancelar</Button>
                         </div>
                       </Alert>
                     )
@@ -183,15 +205,7 @@ const RegisterForm = () => {
               exit={{ opacity: 0, x: 100 }}
               transition={{ duration: 0.3 }}
             >
-               <CardContent className=''>
-                        <Input
-                          type="text"
-                          id='nombre'
-                          placeholder="Nombre de PC"
-                          className='' 
-                          {...register('nombre')}
-                          />
-                     </CardContent>
+             
               <CardContent>
                 <div>
                   <Label> Numero de serie   </Label>

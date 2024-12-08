@@ -47,9 +47,9 @@ const LoginForm = () => {
   return (
      <div className="w-full max-w-md mx-auto">
       <div className="rounded-xl shadow-2xl overflow-hidden">
-        <div className="bg-gradient-to-t from-sky-600 via-blue-700 to-neutral-900 p-8">
-          <h1 className="text-center font-bold text-3xl text-white mb-2">Inicia sesión</h1>
-          <p className="text-center text-blue-100">Ingresa tus credenciales para acceder</p>
+        <div className=" p-8">
+          <h1 className="text-center font-bold text-3xl mb-2">Inicia sesión</h1>
+          <p className="text-center ">Ingresa tus credenciales para acceder</p>
         </div>
         <form onSubmit={handleSubmit} className="p-8 space-y-6  bg-white">
           <div className="space-y-2">
@@ -66,7 +66,7 @@ const LoginForm = () => {
                 name="usuario"
                 value={usuario}
                 onChange={(e) => setUsuario(e.target.value)}
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 md:text-2xl sm:text-sm transition duration-150 ease-in-out"
+                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500  sm:text-sm transition duration-150 ease-in-out"
                 placeholder="Ingresa tu usuario"
                 required
               />
@@ -87,7 +87,7 @@ const LoginForm = () => {
                 name="pass"
                 value={pass}
                 onChange={(e) => setPassword(e.target.value)}
-                className="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 md:text-2xl sm:text-sm transition duration-150 ease-in-out"
+                className="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500  sm:text-sm transition duration-150 ease-in-out"
                 placeholder="Ingresa tu contraseña"
                 required
               />
@@ -116,11 +116,11 @@ const LoginForm = () => {
             </button>
           </div>
         </form>
-        <div className="px-8 py-4 bg-gray-50 border-t border-gray-100 text-center">
+        {/* <div className="px-8 py-4 bg-gray-50 border-t border-gray-100 text-center">
           <a href="#" className="text-sm text-blue-600 hover:text-blue-500">
             ¿Olvidaste tu contraseña?
           </a>
-        </div>
+        </div> */}
       </div>
     </div>
   );

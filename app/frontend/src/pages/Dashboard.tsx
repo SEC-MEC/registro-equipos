@@ -10,6 +10,7 @@ const Dashboard = () => {
 
   return (
 <Layout>
+  
   <ItemTable/>
 </Layout>
 

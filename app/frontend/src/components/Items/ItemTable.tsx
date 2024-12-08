@@ -16,6 +16,10 @@ import { Download } from 'lucide-react';
 import UpdateDialog from '../dialog/UpdateDialog'
 import { toast } from 'sonner'
 import { DeleteConfirmDialog } from '../dialog/DeleteConfirmDialog'
+import { BadgeCheck } from 'lucide-react';
+import { Ban } from 'lucide-react';
+import { Building } from 'lucide-react';
+
 
 
 interface Item {
@@ -122,7 +126,11 @@ export default function Component () {
 
 
   return (
+ 
+
+   
     <div className="p-4 md:p-8 bg-zinc-100 min-h-screen">
+  
       <div className="max-w-7xl mx-auto space-y-8 ">
         <aside className='flex justify-between items-center'>
            <h1 className="text-3xl font-bold text-zinc-800">Inventario de Equipos</h1>
@@ -151,12 +159,12 @@ export default function Component () {
                   <TableHead className="bg-zinc-50 text-zinc-600">Nro. Serie</TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">Tipo</TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">Piso</TableHead>
-                  <TableHead className="bg-zinc-50 text-zinc-600">Oficina</TableHead>
+                  <TableHead className="bg-zinc-50 text-zinc-600 flex items-center gap-1">Oficina <Building/></TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">Unidad Ejecutora</TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">ID Inventario</TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">Comentarios</TableHead> 
                   <TableHead className="bg-zinc-50 text-zinc-600">Fecha</TableHead>
-                  <TableHead className="bg-zinc-50 text-zinc-600">Dominio</TableHead>
+                  <TableHead className="bg-zinc-50 text-zinc-600">En dominio</TableHead>
                   <TableHead className="bg-zinc-50 text-zinc-600">Tecnico asignado</TableHead> 
                   <TableHead className="bg-zinc-50 text-zinc-600">Usuario</TableHead> 
                   <TableHead className="bg-zinc-50 text-zinc-600">App instaladas</TableHead>
@@ -178,12 +186,12 @@ export default function Component () {
                       <TableCell>{item.nro_serie}</TableCell>
                       <TableCell>{item.tipo}</TableCell>
                       <TableCell>{item.piso}</TableCell>
-                      <TableCell>{item.oficina}</TableCell>
+                      <TableCell> {item.oficina} </TableCell>
                       <TableCell>{item.UE}</TableCell>
                       <TableCell>{item.id_inventario}</TableCell>
                       <TableCell>{item.observaciones}</TableCell>
                       <TableCell>{item.last_update? format(new Date(item.last_update), 'dd/MM/yyyy', { locale: es }) : <p className='text-gray-400'>N/A</p>}</TableCell>
-                      <TableCell>{item.dominio ? 'Sí' : 'No'}</TableCell>
+                      <TableCell>{item.dominio ? ( <div className=''><BadgeCheck className='text-green-600 '/></div> ) : (<Ban className='text-gray-600'/>)}</TableCell>
                       <TableCell>{item.Tecnico ? item.Tecnico : <p className='text-gray-400'>N/A</p> }</TableCell>
                       <TableCell>{item.Usuario ? item.Usuario : <p className='text-gray-400'>N/A</p> }</TableCell>
                       <TableCell>
@@ -285,7 +293,8 @@ export default function Component () {
             </Select>
           </div>
         </div>
-      </div>
+      </div> 
     </div>
+    
   )
 }
