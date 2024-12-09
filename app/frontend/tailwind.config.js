@@ -11,6 +11,11 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"
   ],
+  safelist: [
+    "rounded-lg",
+    "rounded-md",
+    "rounded-sm"
+  ],
   theme: {
     extend: {
       borderRadius: {
