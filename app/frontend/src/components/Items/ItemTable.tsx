@@ -150,7 +150,7 @@ export default function Component () {
           />
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400" size={20} />
         </div>
-        <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="bg-white rounded-xl shadow overflow-hidden">
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
