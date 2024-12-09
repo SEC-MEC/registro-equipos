@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { Pencil } from 'lucide-react';
+import { Loader2, Pencil } from 'lucide-react';
 import { toast } from "sonner";
 
 
@@ -48,7 +48,8 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({id}) => {
     })
 
     const onSubmit =  (data: any) => {
-         updateMutation.mutate({dataToUpdate: data})
+     updateMutation.mutate({dataToUpdate: data})         
+         
     }
 
   return (
@@ -88,7 +89,7 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({id}) => {
          
         </div>
         <DialogFooter>
-          <Button type="submit">Guardar cambios</Button>
+          <Button type="submit" disabled={updateMutation.isPending}> { updateMutation.isPending ? <><Loader2  className="animate-spin w-4 h-4 mr-2"/> Guardando cambios</> : <>Guardar cambios</> } </Button>
         </DialogFooter>
          </form>
       </DialogContent>

@@ -66,7 +66,7 @@ export function ChangePasswordDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className="w-full hover:bg-gray-100 flex rounded-md gap-2 py-1 px-3  font-semibold"><span><KeyRound className="w-4"/></span> <p className="ml-3 text-sm">Cambiar contraseña</p></button>
+        <button className=" hover:bg-zinc-200 transition-all  flex items-center rounded-md gap-1  py-2 px-3  font-semibold"><span><KeyRound className="w-4"/></span> <p className="ml-3 text-sm">Cambiar contraseña</p></button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

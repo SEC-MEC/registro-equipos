@@ -12,6 +12,7 @@ import { ScrollShadow } from "@nextui-org/react"
 import { useForm } from "react-hook-form"
 import { AnimatePresence, motion } from "framer-motion"
 import { toast } from "sonner"
+import { Loader2 } from "lucide-react"
 
 interface Aplicacion {
   id_app: string
@@ -125,7 +126,7 @@ const ItemProfile = () => {
 
   return (
     <Layout>
-      <Card className="w-full max-w-4xl mx-auto mt-12">
+      <Card className="w-full max-w-4xl mx-auto mt-24">
         <CardHeader>
   
           <Button onClick={toggleAddApps} >
@@ -160,7 +161,7 @@ const ItemProfile = () => {
                       ))
                     )}
                   </ScrollShadow>
-                  <Button type="submit">Agregar nuevas aplicaciones</Button>
+                  <Button type="submit" disabled={appMutation.isPending}> { appMutation.isPending ?<> <Loader2 className="h-4 w-4 animate-spin "/> </> : <>Agregar nuevas aplicaciones</> } </Button>
                 </form>
               </motion.div>
             )}
@@ -189,7 +190,7 @@ const ItemProfile = () => {
                   <TableRow key={aplicacion.id_app} >
                     <TableCell className="font-medium">{aplicacion.aplicacion.nombre}</TableCell>
                     <TableCell>{aplicacion.aplicacion.version || 'N/A'}</TableCell>
-                    <TableCell className="ml-auto"> <Button onClick={() => handleDelete(aplicacion.id_app)}>Eliminar</Button></TableCell>
+                    <TableCell className="ml-auto"> <Button onClick={() => handleDelete(aplicacion.id_app)} disabled={deleteMutation.isPending}>  { deleteMutation.isPending ? <><Loader2  className="h-4 w-4 m-auto animate-spin "/></> : <>Eliminar</>} </Button></TableCell>
                   </TableRow>
                 ))}
               </TableBody>

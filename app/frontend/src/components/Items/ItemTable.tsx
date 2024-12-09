@@ -129,18 +129,12 @@ export default function Component () {
  
 
    
-    <div className="p-4 md:p-8 bg-zinc-100 min-h-screen">
+    <div className="p-4 md:p-8 min-h-screen">
   
-      <div className="max-w-7xl mx-auto space-y-8 ">
-        <aside className='flex justify-between items-center'>
-           <h1 className="text-3xl font-bold text-zinc-800">Inventario de Equipos</h1>
-           <div className='flex items-center gap-2'>
-              <Link to='/registro' className='px-3 py-1 rounded-sm w-64 text-center bg-zinc-800 text-white font-semibold hover:bg-zinc-700'>Registrar nuevo equipo</Link>
-           </div>
-         
-        </aside>
+      <div className="max-w-7xl mx-auto space-y-3 ">
+  
        
-        <div className="relative">
+        <div className="relative mt-16">
           <Input
             type="text"
             placeholder="Buscar en todos los campos..."

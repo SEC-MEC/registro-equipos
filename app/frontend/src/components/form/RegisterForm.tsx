@@ -15,7 +15,7 @@ import { toast } from "sonner"
 import { Checkbox } from '../ui/checkbox'
 import { useAuthStore } from '@/context/store'
 
-import { HardDrive, MonitorCheck } from 'lucide-react';
+import { HardDrive, Loader2, MonitorCheck } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert'
 import { Building } from 'lucide-react';
 import { ScrollShadow } from '@nextui-org/react'
@@ -189,7 +189,12 @@ const RegisterForm = () => {
             </AlertTitle>
             <div className='flex items-center  justify-center'>
 
-            <Button onClick={handleCreateEquipo}>Confirmar nombre</Button>
+            <Button onClick={handleCreateEquipo} disabled={createEquipoMutation.isPending} 
+            >
+              {
+                createEquipoMutation.isPending ? <><Loader2 className='mr-2 h-4 w-4 animate-spin'/> Registrando...</> : "Confirmar nombre"
+              }
+              </Button>
                         </div>
                       </Alert>
                     )
@@ -217,8 +222,6 @@ const RegisterForm = () => {
                   />
                 </div>
               </CardContent>
-             
-
               <CardContent>
                 <div>
                   <Label> Tipo </Label>
@@ -281,7 +284,7 @@ const RegisterForm = () => {
   <select
   id="oficina"
   {...register('oficina')}
-  className="w-[400px] p-2 border rounded"
+  className="w-[400px] p-2 border rounded" required
 >
   <option value="" disabled>Seleccione una oficina</option>
   {isLoading ? (
@@ -308,7 +311,7 @@ const RegisterForm = () => {
     <select
       id="unidad"
       {...register('unidad')}
-      className="w-[400px] p-2 border rounded"
+      className="w-[400px] p-2 border rounded" required
     >
       <option value="" disabled> Seleccione una unidad</option>
         <option value="DGS" >Direccion General de Secretaria </option>
@@ -350,11 +353,11 @@ const RegisterForm = () => {
             <ScrollShadow offset={100} orientation="horizontal" className="w-full h-[300px] overflow-y-auto rounded-md border">
             {
               aplicaciones?.map((app: {id: number, nombre: string}) => (
-                <div key={app.id} className="flex gap-1 items-center text-xl px-4">
+                <div key={app.id} className="flex gap-1 items-center  px-4">
                 <input
         type="checkbox"
         id={`app-${app.id}`}
-        className="text-2xl p-4 rounded-md"
+        className=" p-4 rounded-md"
         onChange={() => handleCheckboxChange(app.id.toString())}
       />
               <label htmlFor={`app-${app.id}`} className="flex-grow cursor-pointer">{app.nombre}</label>
