@@ -33,8 +33,8 @@ const Navbar = ({ className }: NavbarProps) => {
   return (
     <nav
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 w-7/12 m-auto border mt-2 shadow-xl rounded-xl backdrop-blur-2xl bg-transparent transition-all duration-300",
-        isScrolled ? "bg-white/80 backdrop-blur-md shadow-md" : "bg-transparent",
+        "fixed top-0 left-0 right-0 z-50 w-7/12 m-auto border mt-2 shadow-xl rounded-xl backdrop-blur-2xl  transition-all duration-300",
+        isScrolled ? "bg-white/80 backdrop-blur-2xl shadow-md" : "bg-white",
         className
       )}
     >

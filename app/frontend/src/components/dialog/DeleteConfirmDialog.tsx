@@ -28,7 +28,7 @@ export function DeleteConfirmDialog({ onConfirm }: DeleteConfirmationDialogProps
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="outline" size="icon" className="hover:bg-gray-200">
+        <Button variant="outline" size="icon" className="hover:bg-gray-200 dark:bg-white text-black">
           <Trash2 className="w-4 h-4" />
         </Button>
       </AlertDialogTrigger>

@@ -55,7 +55,7 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({id}) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="border px-2 rounded-md py-1 shadow-xl hover:bg-gray-200"><Pencil className="w-4"/></button>
+        <Button variant={'ghost'} className="border bg-white text-black px-2 rounded-md py-1 shadow-xl hover:bg-gray-200"><Pencil className="w-4"/></Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

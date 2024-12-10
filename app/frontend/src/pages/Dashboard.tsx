@@ -6,12 +6,14 @@ import ItemTable from "../components/Items/ItemTable"
 
 
 
+
 const Dashboard = () => {
 
   return (
 <Layout>
   
   <ItemTable/>
+
 </Layout>
 
   )

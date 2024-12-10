@@ -22,6 +22,7 @@ import { Building } from 'lucide-react';
 
 
 
+
 interface Item {
   id_equipo: number;
   nombre_pc: string;
@@ -126,56 +127,67 @@ export default function Component () {
 
 
   return (
- 
 
    
     <div className="p-4 md:p-8 min-h-screen">
   
+
+    
+
+   
       <div className="max-w-7xl mx-auto space-y-3 ">
-  
-       
+    
         <div className="relative mt-16">
           <Input
             type="text"
             placeholder="Buscar en todos los campos..."
             value={searchTerm}
             onChange={handleSearch}
-            className="pl-10 bg-white border-zinc-300 focus:border-zinc-500 focus:ring-zinc-500"
+            className="pl-10 bg-white dark:bg-black border-zinc-300 focus:border-zinc-500 focus:ring-zinc-500"
           />
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400" size={20} />
         </div>
-        <div className="bg-white rounded-xl shadow overflow-hidden">
+
+        <div className="  bg-opacity-60 shadow-lg  shadow-zinc-800 dark:shadow-sky-800 dark:backdrop-blur-2xl rounded-xl  overflow-hidden">
           <div className="overflow-x-auto">
-            <Table>
+            <Table className=' '>
+              
               <TableHeader>
-                <TableRow>
-                  <TableHead className="bg-zinc-50 text-zinc-600">Nombre PC</TableHead>
-                  <TableHead className="bg-zinc-50 text-zinc-600">Nro. Serie</TableHead>
-                  <TableHead className="bg-zinc-50 text-zinc-600">Tipo</TableHead>
-                  <TableHead className="bg-zinc-50 text-zinc-600">Piso</TableHead>
-                  <TableHead className="bg-zinc-50 text-zinc-600 flex items-center gap-1">Oficina <Building/></TableHead>
-                  <TableHead className="bg-zinc-50 text-zinc-600">Unidad Ejecutora</TableHead>
-                  <TableHead className="bg-zinc-50 text-zinc-600">ID Inventario</TableHead>
-                  <TableHead className="bg-zinc-50 text-zinc-600">Comentarios</TableHead> 
-                  <TableHead className="bg-zinc-50 text-zinc-600">Fecha</TableHead>
-                  <TableHead className="bg-zinc-50 text-zinc-600">En dominio</TableHead>
-                  <TableHead className="bg-zinc-50 text-zinc-600">Tecnico asignado</TableHead> 
-                  <TableHead className="bg-zinc-50 text-zinc-600">Usuario</TableHead> 
-                  <TableHead className="bg-zinc-50 text-zinc-600">App instaladas</TableHead>
-                  <TableHead className="bg-zinc-50 text-zinc-600">Exportar PDF</TableHead>
-                  { isAdmin && <TableHead className="bg-zinc-50 text-zinc-600">Editar/Eliminar</TableHead >}
+                <TableRow className=''>
+                  <TableHead className="  dark:text-white">Nombre PC</TableHead>
+                  <TableHead className="  dark:text-white">Nro. Serie</TableHead>
+                  <TableHead className="  dark:text-white">Tipo</TableHead>
+                  <TableHead className="  dark:text-white">Piso</TableHead>
+                  <TableHead className="  dark:text-white flex items-center p-1 gap-1">Oficina <Building/></TableHead>
+                  <TableHead className="  dark:text-white">Unidad Ejecutora</TableHead>
+                  <TableHead className="  dark:text-white">ID Inventario</TableHead>
+                  <TableHead className="  dark:text-white">Comentarios</TableHead> 
+                  <TableHead className="  dark:text-white">Fecha</TableHead>
+                  <TableHead className=" dark:text-white">En dominio</TableHead>
+                  <TableHead className="  dark:text-white">Tecnico asignado</TableHead> 
+                  <TableHead className="  dark:text-white">Usuario</TableHead> 
+                  <TableHead className="  dark:text-white">App instaladas</TableHead>
+                  <TableHead className="  dark:text-white">Exportar PDF</TableHead>
+                  { isAdmin && <TableHead className="  dark:text-white">Editar/Eliminar</TableHead >}
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <AnimatePresence>
-                  {currentData.map((item, index) => (
+               
+
+               
+                <AnimatePresence >
+            
+                 
+                  
+                  {currentData.map((item, index) => ( 
+                   
                     <motion.tr
                       key={`${item.id_equipo}-${item.nro_serie}-${item.oficina}-${index}`}
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.2 }}
-                      className="hover:bg-zinc-50 transition-colors">
+                      className="hover:bg-zinc-50  dark:hover:text-black transition-colors">
                       <TableCell className="font-medium">{item.nombre_pc}</TableCell>
                       <TableCell>{item.nro_serie}</TableCell>
                       <TableCell>{item.tipo}</TableCell>
@@ -189,7 +201,7 @@ export default function Component () {
                       <TableCell>{item.Tecnico ? item.Tecnico : <p className='text-gray-400'>N/A</p> }</TableCell>
                       <TableCell>{item.Usuario ? item.Usuario : <p className='text-gray-400'>N/A</p> }</TableCell>
                       <TableCell>
-                        <Link to={`/aplicaciones/${item.id_equipo}`} className="text-blue-500 hover:underline font-semibold">Ver más</Link>
+                        <Link to={`/aplicaciones/${item.id_equipo}`} className="text-blue-500 hover:underline font-semibold">Ver Apps</Link>
                         </TableCell>
                         <TableCell>
                           <Button onClick={() => handleGeneratePDF(item)}><Download/></Button>
@@ -206,14 +218,17 @@ export default function Component () {
                     </TableCell>
                         
                     </motion.tr>
-                  ))}
+               ))}   
                 </AnimatePresence>
+                 
               </TableBody>
+         
             </Table>
           </div>
+          
         </div>
         {filteredData.length === 0 && (
-          <div className="text-center text-zinc-600">No se encontraron resultados.</div>
+          <div className="text-center text-zinc-600 dark:text-white">No se encontraron resultados.</div>
         )}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
@@ -266,7 +281,7 @@ export default function Component () {
             </Button>
           </div>
           <div className="flex items-center space-x-2">
-            <span className="text-sm text-zinc-600">Elementos por página:</span>
+            <span className="text-sm text-zinc-600 dark:text-white">Elementos por página:</span>
             <Select
               value={itemsPerPage.toString()}
               onValueChange={(value) => {
@@ -286,8 +301,11 @@ export default function Component () {
               </SelectContent>
             </Select>
           </div>
+      
         </div>
+      
       </div> 
+    
     </div>
     
   )
