@@ -16,6 +16,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { Loader2, Pencil } from 'lucide-react';
 import { toast } from "sonner";
+import { Textarea } from "../ui/textarea";
 
 
 interface UpdateDialogProps {
@@ -78,6 +79,19 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({id}) => {
               Nro Serie
             </Label>
             <Input id="nro_serie"  className="col-span-3" {...register('nro_serie')} />
+          </div>
+
+          <div className="grid grid-cols-4 items-center gap-4">
+            
+            <Label htmlFor="observaciones" className="text-right">
+              Observaciones
+            </Label>
+             <Textarea
+                    id="observaciones"
+                    placeholder="Observaciones.."
+                    {...register('observaciones')}
+                    className='resize-none'
+                  />
           </div>
      
           <div className="grid grid-cols-4 items-center gap-4">
