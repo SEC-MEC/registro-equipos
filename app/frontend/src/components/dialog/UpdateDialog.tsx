@@ -71,17 +71,17 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({id}) => {
             <Label htmlFor="name" className="text-right">
               Nombre Pc
             </Label>
-            <Input id="nombre"  className="col-span-3" {...register('nombre')} />
+            <Input id="nombre" placeholder="Nombre de PC"  className="col-span-3" {...register('nombre')} />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             
             <Label htmlFor="name" className="text-right">
               Nro Serie
             </Label>
-            <Input id="nro_serie"  className="col-span-3" {...register('nro_serie')} />
+            <Input id="nro_serie"  placeholder="Nro Serie.."  className="col-span-3" {...register('nro_serie')} />
           </div>
 
-          <div className="grid grid-cols-4 items-center gap-4">
+          <div className="flex items-center  gap-1">
             
             <Label htmlFor="observaciones" className="text-right">
               Observaciones
@@ -90,7 +90,7 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({id}) => {
                     id="observaciones"
                     placeholder="Observaciones.."
                     {...register('observaciones')}
-                    className='resize-none'
+                    className='resize-none '
                   />
           </div>
      
@@ -98,7 +98,7 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({id}) => {
             <Label htmlFor="name" className="text-right">
               Id inventario
             </Label>
-            <Input id="id_inventario"  className="col-span-3" {...register('id_inventario')} />
+            <Input id="id_inventario"  placeholder="Id de Inventario"  className="col-span-3" {...register('id_inventario')} />
           </div>
          
         </div>
