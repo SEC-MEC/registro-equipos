@@ -1,14 +1,15 @@
-import { Card, CardContent, CardFooter } from '../ui/card';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 import { registerRequest } from '@/api/auth';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const UserForm = () => {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
@@ -37,7 +38,7 @@ const UserForm = () => {
       apellido: data.apellido,
       usuario: data.usuario,
       pass: data.pass,
-      es_admin: data.es_admin === 'true' ? true : false,
+      es_admin: data.es_admin === 'true',
     };
     userMutation.mutate(dataJson);
   };
@@ -46,78 +47,119 @@ const UserForm = () => {
 
   return (
     <div className='flex justify-center items-center mt-24 p-4'>
-      <Card className='px-6 py-6 w-3/12'>
-        <form onSubmit={handleSubmit(onSubmit)} className=''>
-          <CardContent>
-            <div>
-              <Label>Nombre</Label>
-              <Input placeholder="Nombre" {...register('nombre', { required: true })} />
-              {errors.nombre && <span className="text-red-500">Este campo es obligatorio</span>}
-            </div>
-          </CardContent>
-          <CardContent>
-            <div>
-              <Label>Apellido</Label>
-              <Input placeholder="Apellido" {...register('apellido', { required: true })} />
-              {errors.apellido && <span className="text-red-500">Este campo es obligatorio</span>}
-            </div>
-          </CardContent>
-          <CardContent>
-            <div>
-              <Label>Usuario</Label>
-              <Input placeholder="Usuario" {...register('usuario', { required: true })} />
-              {errors.usuario && <span className="text-red-500">Este campo es obligatorio</span>}
-            </div>
-          </CardContent>
-          <CardContent>
-            <div>
-              <Label>Contraseña</Label>
-              <Input   type={showPassword ? 'text' : 'password'} placeholder="Contraseña" {...register('pass', { required: true })} />
-              {errors.pass && <span className="text-red-500">Este campo es obligatorio</span>}
-            </div>
-          </CardContent>
-          <CardContent>
-            <div>
-              <Label>Repetir Contraseña</Label>
+      <Card className='w-full max-w-md'>
+        <form onSubmit={handleSubmit(onSubmit)} className='space-y-4 p-6'>
+          <div className="space-y-2">
+            <Label htmlFor="nombre">Nombre</Label>
+            <Input
+              id="nombre"
+              placeholder="Nombre"
+              {...register('nombre', { required: 'Este campo es obligatorio' })}
+              required
+            />
+            {errors.nombre && <span className="text-red-500 text-sm">{errors.nombre.message as string}</span>}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="apellido">Apellido</Label>
+            <Input
+              id="apellido"
+              placeholder="Apellido"
+              {...register('apellido', { required: 'Este campo es obligatorio' })}
+              required
+            />
+            {errors.apellido && <span className="text-red-500 text-sm">{errors.apellido.message as string}</span>}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="usuario">Usuario</Label>
+            <Input
+              id="usuario"
+              placeholder="Usuario"
+              {...register('usuario', { required: 'Este campo es obligatorio' })}required
+            />
+            {errors.usuario && <span className="text-red-500 text-sm">{errors.usuario.message as string}</span>}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="pass">Contraseña</Label>
+            <div className="relative">
               <Input
-                  type={showPassword ? 'text' : 'password'}
-                placeholder='Repetir Contraseña'
+                id="pass"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Ingresa tu contraseña"
+                {...register('pass', { required: 'Este campo es obligatorio' })}
+                required
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" aria-hidden="true" />
+                ) : (
+                  <Eye className="h-4 w-4" aria-hidden="true" />
+                )}
+              </Button>
+            </div>
+            {errors.pass && <span className="text-red-500 text-sm">{errors.pass.message as string}</span>}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="repeatPass">Repetir contraseña</Label>
+            <div className="relative">
+              <Input
+                id="repeatPass"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Repite tu contraseña"
                 {...register('repeatPass', {
-                  required: true,
+                  required: 'Este campo es obligatorio',
                   validate: value => value === password || 'Las contraseñas no coinciden',
                 })}
+                required
               />
-              {errors.repeatPass && <span className="text-red-500">{typeof errors.repeatPass.message === 'string' ? errors.repeatPass.message : ''}</span>}
-              <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="text-gray-400 hover:text-gray-500 focus:outline-none focus:text-gray-500 transition ease-in-out duration-150"
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5" aria-hidden="true" />
-                  ) : (
-                    <Eye className="h-5 w-5" aria-hidden="true" />
-                  )}
-                </button>
-              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" aria-hidden="true" />
+                ) : (
+                  <Eye className="h-4 w-4" aria-hidden="true" />
+                )}
+              </Button>
             </div>
-          </CardContent>
-          <CardContent>
-            <div className='flex space-y-2 flex-col'>
-              <Label>Rol</Label>
-              <select className='w-full rounded-md border px-2 py-1' {...register('es_admin', { required: true })}>
-                <option value="true">Administrador</option>
-                <option value="false">Usuario</option>
-              </select>
-              {errors.es_admin && <span className="text-red-500">Este campo es obligatorio</span>}
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button className='w-full mt-5' disabled={userMutation.isPending} type='submit'>
-              {userMutation.isPending ? (<><Loader2 className='w-4 h-4 mr-2 animate-spin' /> Registrando... </>) : 'Registrar'}
-            </Button>
-          </CardFooter>
+            {errors.repeatPass && <span className="text-red-500 text-sm">{errors.repeatPass.message as string}</span>}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="es_admin">Rol</Label>
+            <Select {...register('es_admin', { required: 'Este campo es obligatorio' })} required>
+              <SelectTrigger>
+                <SelectValue placeholder="Selecciona un rol" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="true">Administrador</SelectItem>
+                <SelectItem value="false">Usuario</SelectItem>
+              </SelectContent>
+            </Select>
+            {errors.es_admin && <span className="text-red-500 text-sm">{errors.es_admin.message as string}</span>}
+          </div>
+
+          <Button className='w-full mt-6' disabled={userMutation.isPending} type='submit'>
+            {userMutation.isPending ? (
+              <>
+                <Loader2 className='w-4 h-4 mr-2 animate-spin' />
+                Registrando...
+              </>
+            ) : 'Registrar'}
+          </Button>
         </form>
       </Card>
     </div>
@@ -125,3 +167,4 @@ const UserForm = () => {
 };
 
 export default UserForm;
+
