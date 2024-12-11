@@ -6,12 +6,14 @@ import { Button } from '../ui/button';
 import { registerRequest } from '@/api/auth';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const UserForm = () => {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   const userMutation = useMutation({
     mutationFn: registerRequest,
@@ -70,7 +72,7 @@ const UserForm = () => {
           <CardContent>
             <div>
               <Label>Contraseña</Label>
-              <Input type="password" placeholder="Contraseña" {...register('pass', { required: true })} />
+              <Input   type={showPassword ? 'text' : 'password'} placeholder="Contraseña" {...register('pass', { required: true })} />
               {errors.pass && <span className="text-red-500">Este campo es obligatorio</span>}
             </div>
           </CardContent>
@@ -78,7 +80,7 @@ const UserForm = () => {
             <div>
               <Label>Repetir Contraseña</Label>
               <Input
-                type="password"
+                  type={showPassword ? 'text' : 'password'}
                 placeholder='Repetir Contraseña'
                 {...register('repeatPass', {
                   required: true,
@@ -86,6 +88,19 @@ const UserForm = () => {
                 })}
               />
               {errors.repeatPass && <span className="text-red-500">{typeof errors.repeatPass.message === 'string' ? errors.repeatPass.message : ''}</span>}
+              <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="text-gray-400 hover:text-gray-500 focus:outline-none focus:text-gray-500 transition ease-in-out duration-150"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" aria-hidden="true" />
+                  ) : (
+                    <Eye className="h-5 w-5" aria-hidden="true" />
+                  )}
+                </button>
+              </div>
             </div>
           </CardContent>
           <CardContent>
