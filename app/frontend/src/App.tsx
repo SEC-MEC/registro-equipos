@@ -7,6 +7,7 @@ import {ProtectedRoute} from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import RegisterPage from "./pages/RegisterPage";
 import ItemProfile from "./components/Items/ItemProfile";
+import RegisterUserPage from "./pages/RegisterUserPage";
 
 
 
@@ -23,6 +24,7 @@ const AppContent = () => {
       <Route path="/auth" element={<Dashboard />} />
       <Route path="/registro" element={<RegisterPage />} />
       <Route path="/aplicaciones/:id" element={<ItemProfile/> }/>
+      <Route path="/new/account" element={<RegisterUserPage/> }/>
       </Route>
 
     </Routes>

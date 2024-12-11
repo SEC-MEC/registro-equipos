@@ -148,7 +148,7 @@ export default function Component () {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400" size={20} />
         </div>
 
-        <div className="  bg-opacity-60 shadow-lg  shadow-zinc-800 dark:shadow-sky-800 dark:backdrop-blur-2xl rounded-xl  overflow-hidden">
+        <div className="dark:bg-zinc-900 dark:bg-opacity-60  backdrop-blur-3xl shadow-lg shadow-zinc-800 dark:shadow-sky-800 dark:backdrop-blur-3xl rounded-xl  overflow-hidden">
           <div className="overflow-x-auto">
             <Table className=' '>
               

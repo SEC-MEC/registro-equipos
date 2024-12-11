@@ -366,7 +366,7 @@ const RegisterForm = () => {
             } 
             </ScrollShadow>
 
-              <CardFooter>
+              <CardFooter className='py-2'>
                 <Button type="button" onClick={prevStep} className="w-full mr-2">Volver</Button>
                 <Button type="submit" className="w-full">Registrar</Button>
               </CardFooter>

@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Home, LogOut, PcCase, Menu, X } from 'lucide-react'
 import { useAuthStore } from '@/context/store'
 import { ChangePasswordDialog } from './dialog/ChangePasswordDialog'
+import { UserRoundPlus } from 'lucide-react';
 
 const navItems = [
   { icon: Home, label: 'Inicio', href: '/auth' },
   { icon: PcCase, label: 'Registrar equipo', href: '/registro' },
+
 ]
 
 interface NavbarProps {
@@ -20,6 +22,9 @@ const Navbar = ({ className }: NavbarProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const navigate = useNavigate()
   const logOut = useAuthStore((state) => state.logout)
+  const profile = useAuthStore((state) => state.profile)
+  const userRol = profile.data.es_admin
+  console.log(userRol)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,7 +38,7 @@ const Navbar = ({ className }: NavbarProps) => {
   return (
     <nav
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 w-7/12 m-auto border mt-2 shadow-xl rounded-xl backdrop-blur-2xl  transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-50 w-9/12 m-auto border mt-2 shadow-xl rounded-xl backdrop-blur-2xl  transition-all duration-300",
         isScrolled ? "bg-white/80 backdrop-blur-2xl shadow-md" : "bg-white",
         className
       )}
@@ -58,6 +63,9 @@ const Navbar = ({ className }: NavbarProps) => {
                   <span>{item.label}</span>
                 </Button>
               ))}
+                 {
+              userRol  && <Link to="/new/account" className='dark:hover:bg-black dark:hover:text-white dark:text-black px-3 py-2 rounded-md flex items-center gap-1 hover:bg-zinc-200 text-sm'><UserRoundPlus className='w-5 h-5'/> <p className='font-semibold'>Registrar usuario</p></Link> 
+            }
               <ChangePasswordDialog />
               <Button
                 variant="ghost"
@@ -97,6 +105,9 @@ const Navbar = ({ className }: NavbarProps) => {
                 <span>{item.label}</span>
               </Button>
             ))}
+             {
+              userRol  && <Link to="/new/account" className='px-3 py-2 rounded-md flex items-center gap-2 font-semibold text-sm'><UserRoundPlus className='w-5 h-5'/> Registrar usuario</Link> 
+            }
             <ChangePasswordDialog />
             <Button
               variant="ghost"
