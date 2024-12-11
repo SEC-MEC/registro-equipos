@@ -140,7 +140,7 @@ const UserForm = () => {
 
           <div className="space-y-2">
             <Label htmlFor="es_admin">Rol</Label>
-            <Select {...register('es_admin', { required: 'Este campo es obligatorio' })} required>
+            <Select {...register('es_admin')} required>
               <SelectTrigger>
                 <SelectValue placeholder="Selecciona un rol" />
               </SelectTrigger>
