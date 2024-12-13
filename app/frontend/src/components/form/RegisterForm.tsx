@@ -45,7 +45,8 @@ const RegisterForm = () => {
       observaciones: '',
       nombre_usuario: '',
       oficina: '',
-      unidad: ''
+      unidad: '',
+      equipo_usuario: ''
     }
   })
 
@@ -112,16 +113,8 @@ const RegisterForm = () => {
         nro_serie: data.nro_serie,
         tipo: data.tipo,
         id_inventario:  data.id_inventario,
-        dominio: data.dominio ? true : false,
-        equipo_usuario: {
-          create: {
-            usuario: {
-              create: {
-                nombre: data.nombre_usuario || "Sin usuario",
-              },
-            },
-          },
-        },
+        dominio: data.dominio,
+        equipo_usuario: data.equipo_usuario,
         id_tecnico: userId, 
         aplicaciones: selectedAplicaciones.map(app => app.id),
       };
@@ -200,7 +193,7 @@ const RegisterForm = () => {
                     )
                   }
       </CardHeader>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} >
         <AnimatePresence mode="wait">
           {step === 1 && (
             <motion.div
@@ -237,22 +230,13 @@ const RegisterForm = () => {
                 </div>
               </CardContent>
 
-              <CardContent>
-                <div className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                  <div>
-                    <Checkbox
-                      id="dominio"
-                      {...register('dominio')}
-                      className="w-4 h-4"
-                    />
-                  </div>
-                  <div className="space-y-1 leading-none">
-                    <Label htmlFor="dominio">En Dominio</Label>
-                    <div>Marque si el equipo está en el dominio.</div>
-                  </div>
-                </div>
-              </CardContent>
-
+             <CardContent>
+              <Label>Dominio</Label>
+              <select  {...register('dominio')} className="w-full  p-2 border rounded" required>
+                <option value="true">En dominio</option> 
+                <option value="false">Sin dominio</option>
+              </select>
+             </CardContent>
               <CardContent>
                 <div>
                   <Label> Id de Inventario </Label>
@@ -339,9 +323,9 @@ const RegisterForm = () => {
                 <div>
                   <Label> Nombre del usuario para esta PC</Label>
                   <Input
-                    id="nombre_usuario"
+                    id="equipo_usuario"
                     placeholder="Nombre del usuario.."
-                    {...register('nombre_usuario')}
+                    {...register('equipo_usuario')}
                   />
                 </div>
               </CardContent>

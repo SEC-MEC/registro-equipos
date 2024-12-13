@@ -78,9 +78,11 @@ export const createEquipo = async (req, res) => {
         id_oficina,
         id_tecnico,
         aplicaciones,
+        equipo_usuario,
     } = req.body;
 
     try {
+        console.log(req.body)
         const equipo = await prisma.$transaction(async (tx) => {
 
           
@@ -91,7 +93,19 @@ export const createEquipo = async (req, res) => {
                 id_inventario,
                 tipo,
                 observaciones,
-                dominio,
+                dominio: Boolean(dominio),
+                equipo_usuario: {
+                  create: {
+                    usuario: {
+                      create: {
+                        nombre: equipo_usuario || "N/A",
+                        apellido: equipo_usuario || "N/A",
+                        usr: equipo_usuario || "N/A",
+                        interno: null,
+                      },
+                    },
+                  },
+                },
                 modificado:{
                   create:{
                     id_tecnico: parseInt(id_tecnico),
