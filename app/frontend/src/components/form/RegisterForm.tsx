@@ -11,8 +11,6 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { Textarea } from '../ui/textarea'
 import { toast } from "sonner"
-
-import { Checkbox } from '../ui/checkbox'
 import { useAuthStore } from '@/context/store'
 
 import { HardDrive, Loader2, MonitorCheck } from 'lucide-react';
