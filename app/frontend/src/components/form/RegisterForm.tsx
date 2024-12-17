@@ -111,7 +111,7 @@ const RegisterForm = () => {
         nro_serie: data.nro_serie,
         tipo: data.tipo,
         id_inventario:  data.id_inventario,
-        dominio: data.dominio,
+        dominio: data.dominio === true,
         equipo_usuario: data.equipo_usuario,
         id_tecnico: userId, 
         aplicaciones: selectedAplicaciones.map(app => app.id),
@@ -228,13 +228,22 @@ const RegisterForm = () => {
                 </div>
               </CardContent>
 
-             <CardContent>
-              <Label>Dominio</Label>
-              <select  {...register('dominio')} className="w-full  p-2 border rounded" required>
-                <option value="true">En dominio</option> 
-                <option value="false">Sin dominio</option>
-              </select>
-             </CardContent>
+              <CardContent>
+                <div className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <div>
+                    <input
+                      type="checkbox"
+                      id="dominio"
+                      {...register('dominio')}
+                      className="w-4 h-4"
+                    />
+                  </div>
+                  <div className="space-y-1 leading-none">
+                    <Label htmlFor="dominio">En Dominio</Label>
+                    <div>Marque si el equipo está en el dominio.</div>
+                  </div>
+                </div>
+              </CardContent>
               <CardContent>
                 <div>
                   <Label> Id de Inventario </Label>
