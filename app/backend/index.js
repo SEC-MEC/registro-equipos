@@ -1,8 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import equipoRouter from './routes/equipo.routes.js';
-import authRouter from './routes/auth.routes.js';
+
 import dotenv from 'dotenv';
+import authRouter from './src/infraestructure/routes/user/auth.routes.js';
 dotenv.config();
 
 
