@@ -1,4 +1,4 @@
-import prisma from "../../orm/prisma";
+import prisma from "../../orm/prisma.js";
 import dotenv from 'dotenv'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'

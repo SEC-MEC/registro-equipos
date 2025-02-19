@@ -1,9 +1,11 @@
 import express from 'express';
 import cors from 'cors';
-import equipoRouter from './routes/equipo.routes.js';
-
 import dotenv from 'dotenv';
+
+import equipoRouter from './routes/equipo.routes.js';
 import authRouter from './src/infraestructure/routes/user/auth.routes.js';
+import userRouter from './src/infraestructure/routes/user/user.routes.js';
+
 dotenv.config();
 
 
@@ -22,6 +24,7 @@ const opcionesCors = {
 app.use(cors(opcionesCors));
 app.use(express.json());
 app.use("/", authRouter)
+app.use("/", userRouter)
 app.use("/", equipoRouter)
 
 
