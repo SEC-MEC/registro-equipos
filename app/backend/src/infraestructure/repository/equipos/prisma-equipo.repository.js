@@ -27,5 +27,3 @@ export const createEquipoRepository = async(EquipoData) => {
 
 }
 
-
-

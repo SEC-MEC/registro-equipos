@@ -3,7 +3,6 @@ import dotenv from 'dotenv'
 dotenv.config() 
 
 
-
 export const findUserByNameRepository = async(usuario) => {
     try {
         const user = await prisma.tecnico.findFirst({data: usuario})
@@ -28,20 +27,15 @@ export const findUserByIdRepository = async(req, res) => {
     } catch (error) {
         console.log(error)
     }
-
 }
 
 export const registerUserRepository = async(userData) => {
-
     try {
         const create = await prisma.tecnico.create({data: userData})
-        
         return create;
-
     } catch (error) {
         throw new Error("Error al crear el usuario: " + error.message);
     }
-
 }
 
 
