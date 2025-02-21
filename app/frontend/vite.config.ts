@@ -9,13 +9,13 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-    build:{
+  build:{
     outDir:'dist',
     sourcemap: false
   },
-  server:{
+  preview:{
     port: 5001,
-    open: true,
+    strictPort: true,
   },
   base: '/inventario',
 })

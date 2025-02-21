@@ -7,9 +7,8 @@ export const createEquipoHandler = async (req, res) => {
 
     const {nombre, nro_serie, id_inventario, tipo, observaciones, dominio, id_oficina, id_tecnico, aplicaciones, equipo_usuario} = req.body;
 
- 
 
-    const response = 'hola'
+    const response = await createEquipoService({nombre, nro_serie, id_inventario, tipo, observaciones, dominio, id_oficina, id_tecnico, aplicaciones, equipo_usuario}); 
 
     if(response.success){
         return res.status(200).json(response)

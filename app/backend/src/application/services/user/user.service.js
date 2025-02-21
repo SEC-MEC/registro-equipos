@@ -1,5 +1,5 @@
 import { registerUserRepository, findUserByNameRepository } from "../../../infraestructure/repository/usuarios/prisma-user.repository.js";
-
+import bcrypt from 'bcryptjs';
 
 export const registerService = async ( userData ) => {
     try {

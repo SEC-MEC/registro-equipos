@@ -1,15 +1,14 @@
-FROM node:18-alpine
+FROM node:18
 
-RUN apk add --no-cache openssl
+RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY package.json ./
-COPY package-lock.json ./
+COPY . .
 
 RUN npm install
 
-COPY . .
+RUN npx prisma generate
 
 EXPOSE 9090
 

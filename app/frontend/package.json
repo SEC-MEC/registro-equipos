@@ -3,12 +3,13 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
+"scripts": {
+  "dev": "vite --host",
+  "build": "tsc -b && vite build",
+  "lint": "eslint .",
+  "preview": "vite preview --host",
+  "start": "vite --port 5001 --host"
+},
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
     "@nextui-org/react": "^2.4.8",
