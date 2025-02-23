@@ -1,19 +1,16 @@
-import { createEquipoRepository, findEquipoByNameRepository } from "../../../infraestructure/repository/equipos/prisma-equipo.repository";
+import { createEquipoAppRepository, createEquipoRepository, findEquipoByNameRepository } from "../../../infraestructure/repository/equipos/prisma-equipo.repository";
 
 
 
-export const generarNombreEquipo = async () => {
+export const generarNombreEquipoService = async () => {
 
     try {
         
-        const equipos = await prisma.equipo.findMany({
-            select: {pcName: true},
-        });
-
+        const equipos = await findEquipoByNameRepository();
         
         const numerosUsados = equipos
             .map(e => {
-                const match = e.pcName.match(/\d+$/); 
+                const match = e.nombre.match(/\d+$/); 
                 return match ? parseInt(match[0], 10) : null;
             })
             .filter(num => num !== null) 
@@ -32,9 +29,9 @@ export const generarNombreEquipo = async () => {
 
         const nuevoNombre = nuevoNumeroFormateado;
 
-        return nuevoNombre;
+        return { success: true, data: nuevoNombre };
     } catch (error) {
-        throw new Error("No se pudo generar el nombre del equipo");
+        return { success: false, message: error.message };
     }
 };
 
@@ -42,10 +39,39 @@ export const generarNombreEquipo = async () => {
 export const createEquipoService = async (equipoData) => {
 
     try {   
-        const newEquipo = await createEquipoRepository(equipoData);
-        return newEquipo;
+        const nuevoEquipo = await createEquipoRepository({
+            nombre: equipoData.nombre,
+            nro_serie: equipoData.nro_serie,
+            id_inventario: equipoData.id_inventario,
+            tipo: equipoData.tipo,
+            observaciones: equipoData.observaciones,
+            dominio: equipoData.dominio,
+            equipo_usuario: {
+                create: {
+                    usuario: {
+                        create: {
+                            nombre: equipoData.equipo_usuario,
+                            apellido: equipoData.equipo_usuario,
+                            usr: equipoData.equipo_usuario,
+                            interno: null,
+                        },
+                    },
+                },
+            },
+            modificado: {
+                create: {
+                    id_tecnico: equipoData.id_tecnico,
+                    fecha: new Date(),
+                },
+            },
+            oficina: {
+                connect: { id: equipoData.id_oficina },
+            },
+        });
+        await createEquipoAppRepository(nuevoEquipo.id, equipoData.aplicaciones);
+        return { success: true, message: "Equipo creado con éxito", data: nuevoEquipo};
     } catch (error) {
-        throw new Error("No se pudo crear el equipo");
+        return { success: false, message: error.message };
     }
 
 
