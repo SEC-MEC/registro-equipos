@@ -6,7 +6,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "9090:9090"
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
     env_file:
       - ./backend/.env
     restart: always
@@ -19,7 +19,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "5001:5001"
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     env_file:
       - ./frontend/.env
     restart: always
