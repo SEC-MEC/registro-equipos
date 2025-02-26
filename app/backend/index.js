@@ -13,7 +13,7 @@ dotenv.config();
 const app = express();
 
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8080;
 
 
 const opcionesCors = {
@@ -28,7 +28,7 @@ app.use("/", authRouter)
 app.use("/", equipoRouter)
 
 app.get("/", (req,res) => {
-    res.json("===Index===")
+    res.json("---Index Backend---")
 
 })
 
