@@ -1,5 +1,5 @@
 import Layout from "@/components/Layout"
-import ItemTable from "../components/Items/ItemTable"
+import ItemScan from "@/components/Items/ItemScan"
 
 
 
@@ -12,7 +12,7 @@ const Dashboard = () => {
   return (
 <Layout>
   
-  <ItemTable/>
+  <ItemScan/>
 
 </Layout>
 
