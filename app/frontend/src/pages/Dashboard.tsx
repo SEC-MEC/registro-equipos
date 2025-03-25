@@ -1,5 +1,6 @@
-import Layout from "@/components/Layout"
 import ItemScan from "@/components/Items/ItemScan"
+import Layout from "@/components/Layout"
+
 
 
 

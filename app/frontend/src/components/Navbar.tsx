@@ -2,14 +2,14 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { Home, LogOut, PcCase, Menu, X } from 'lucide-react'
+import { Home, LogOut, Menu, X } from 'lucide-react'
 import { useAuthStore } from '@/context/store'
 import { ChangePasswordDialog } from './dialog/ChangePasswordDialog'
 import { UserRoundPlus } from 'lucide-react';
 
 const navItems = [
   { icon: Home, label: 'Inicio', href: '/auth' },
-  { icon: PcCase, label: 'Registrar equipo', href: '/registro' },
+
 
 ]
 
