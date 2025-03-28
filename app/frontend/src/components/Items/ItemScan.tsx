@@ -2,7 +2,7 @@ import { useState, useMemo } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Search, RefreshCw } from 'lucide-react'
+import { Search, RefreshCw, Laptop } from 'lucide-react'
 import { getAllScanRequest } from "../../api/scan"
 import LoadingScan from "../LoadingScan"
 import InfoDialog from "../dialog/InfoDialog"
@@ -87,7 +87,18 @@ const ItemScan = () => {
     })
   }, [data, searchTerm, floorFilter])
 
-  if (isLoading) return <LoadingScan />
+  if (isLoading) return 
+  <div className="flex justify-center items-center">
+ <div className="space-y-4">
+          <div className="flex flex-col items-center justify-center py-12">
+            <div className="animate-spin mb-4">
+              <Laptop size={48} className="text-primary" />
+            </div>
+            <h2 className="text-xl font-medium mb-2">Cargando inventario...</h2>
+            <p className="text-muted-foreground">Por favor espere mientras obtenemos los datos</p>
+          </div>
+  </div>
+  </div>
 
   if (error)
     return (
