@@ -88,7 +88,7 @@ const ItemScan = () => {
   }, [data, searchTerm, floorFilter])
 
   if (isLoading) return 
-  <div className="flex justify-center items-center">
+  <div className="flex justify-center items-center text-black">
  <div className="space-y-4">
           <div className="flex flex-col items-center justify-center py-12">
             <div className="animate-spin mb-4">
