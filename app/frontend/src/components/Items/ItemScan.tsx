@@ -2,11 +2,9 @@ import { useState, useMemo } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Search, RefreshCw, Laptop } from 'lucide-react'
+import { Search, Laptop } from 'lucide-react'
 import { getAllScanRequest } from "../../api/scan"
-import LoadingScan from "../LoadingScan"
 import InfoDialog from "../dialog/InfoDialog"
-import { Button } from "@/components/ui/button"
 import { 
   Select,
   SelectContent,
@@ -25,28 +23,19 @@ interface ScanItem {
 const ItemScan = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [floorFilter, setFloorFilter] = useState("")
-  const [isRefreshing, setIsRefreshing] = useState(false)
 
-  const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ["scan"],
-    queryFn: getAllScanRequest,
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["scans"],
+    queryFn: async () => {
+      const response = await getAllScanRequest();
+      return response.equipos;
+    } 
   })
 
 
-  const handleRefresh = async () => {
-    setIsRefreshing(true)
-    try {
-      await refetch()
-     
-    } catch (error) {
-      console.error(error)
-    } finally {
-      setIsRefreshing(false)
-    }
-  }
-
   const floorOptions = useMemo(() => {
-    if (!data) return []
+    if (!data || !Array.isArray(data)) return []
     
     const floors = new Set<string | number>()
     
@@ -75,9 +64,10 @@ const ItemScan = () => {
 
       const nameMatch = item.nombre.toLowerCase().includes(searchTerm.toLowerCase())
       
+      
   
       if (!floorFilter || floorFilter === "all") return nameMatch
-      
+
 
       if (floorFilter === "Conectado a telefono") {
         return nameMatch && (item.piso === 10 || item.piso === 11)
@@ -88,7 +78,7 @@ const ItemScan = () => {
   }, [data, searchTerm, floorFilter])
 
   if (isLoading) return 
-  <div className="flex justify-center items-center text-black">
+  <div className="flex justify-center items-center ">
  <div className="space-y-4">
           <div className="flex flex-col items-center justify-center py-12">
             <div className="animate-spin mb-4">
@@ -139,19 +129,6 @@ const ItemScan = () => {
             </SelectContent>
           </Select>
         </div>
-
-     
-        <Button 
-          variant="outline" 
-          size="icon" 
-          onClick={handleRefresh} 
-          disabled={isRefreshing || isLoading}
-          className="h-10 w-10 shrink-0"
-          title="Actualizar escaneo"
-        >
-          <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-          <span className="sr-only">Actualizar escaneo</span>
-        </Button>
       </div>
 
       <div className="rounded-md m-auto border w-11/12 overflow-x-auto">
@@ -191,7 +168,7 @@ const ItemScan = () => {
                 </TableCell>
               </TableRow>
             ) : (
-              filteredData?.map((item: ScanItem, index: number) => (
+              filteredData.map((item: ScanItem, index: number) => (
                 <TableRow key={index}>
                   <TableCell className="font-medium px-3 py-2 md:px-6 md:py-3">{index + 1}</TableCell>
                   <TableCell className="px-3 py-2 md:px-6 md:py-3">{item.nombre}</TableCell>
