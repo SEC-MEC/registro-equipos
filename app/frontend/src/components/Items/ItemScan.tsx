@@ -138,6 +138,7 @@ const ItemScan = () => {
               <TableHead className="w-[100px]">#</TableHead>
               <TableHead>Nombre</TableHead>
               <TableHead>Piso</TableHead>
+              <TableHead>Editar</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody className="min-h-[300px]">
@@ -179,6 +180,9 @@ const ItemScan = () => {
                         <InfoDialog/> 
                       </div>
                     ) : item.piso}
+                  </TableCell>
+                  <TableCell>
+                    boton edit
                   </TableCell>
                 </TableRow>
               ))
