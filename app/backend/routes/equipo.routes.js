@@ -2,7 +2,7 @@
 
 import { Router } from "express";
 import { createEquipo, createName, generateEquipoName, getInfoEquipo, updateEquipos } from "../controllers/equipos/post/postEquipos.controller.js";
-import { getAplicaciones, getAplicacionesById, getEquipos, getOficinas } from "../controllers/equipos/get/getEquipos.controller.js";
+import { getAplicaciones, getAplicacionesById, getEquipos, getEquiposById, getOficinas } from "../controllers/equipos/get/getEquipos.controller.js";
 import { deleteAplicaciones, updateApp } from "../controllers/equipos/aplicaciones/aplicaciones.controller.js";
 import { deleteEquipo } from "../controllers/equipos/delete/deleteEquipos.controller.js";
 
@@ -12,6 +12,7 @@ const equipoRouter = Router();
 
 equipoRouter.post("/create", createEquipo)
 equipoRouter.get("/get", getEquipos)
+equipoRouter.get("/equipo/:id_equipo", getEquiposById)
 equipoRouter.get("/oficinas", getOficinas)
 equipoRouter.get("/aplicaciones/:id_equipo", getAplicacionesById)
 equipoRouter.get("/aplicaciones", getAplicaciones)

@@ -12,6 +12,20 @@ import prisma from "../../../config/db.js";
     }
 }
 
+export const getEquiposById = async (req, res) => {
+    const { id_equipo } = req.params;
+    try {
+        const equipo = await prisma.vistaEquipos.findUnique({
+            where: {
+                id_equipo: parseInt(id_equipo)
+            }
+        });
+        return res.status(200).json(equipo);
+    } catch (error) {
+        console.log("Error en getEquiposById: ", error)
+    }
+}
+
 
 
 export const getOficinas = async (req, res) => {    
@@ -28,13 +42,12 @@ export const getAplicacionesById = async(req,res) => {
     const {id_equipo} = req.params;
     try {
         const aplicaciones = await prisma.equipo_app.findMany({
-            include:{
-                aplicacion: true,
-                equipo: true
-            },
-            where:{
-                id_equipo: parseInt(id_equipo)
-            }
+           where:{
+            id_equipo: parseInt(id_equipo)
+           },
+              include:{
+                aplicacion:true
+              }
         });
         return res.status(200).json(aplicaciones);
     } catch (error) {

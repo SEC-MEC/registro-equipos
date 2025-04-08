@@ -67,12 +67,6 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({id}) => {
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid gap-4 py-4">
-        <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Nombre Pc
-            </Label>
-            <Input id="nombre" placeholder="Nombre de PC"  className="col-span-3" {...register('nombre')} />
-          </div>
           <div className="grid grid-cols-4 items-center gap-4">
             
             <Label htmlFor="name" className="text-right">

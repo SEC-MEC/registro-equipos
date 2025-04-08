@@ -13,6 +13,15 @@ export const getEquipos = async () => {
     }
 }
 
+export const getEquiposById = async (id_equipo: string) => {
+    try {
+        const res = await clienteAxios.get(`/equipo/${id_equipo}`)
+        return res.data
+    } catch (error) {
+        console.log("Error en la obtencion de equipos: ", error)
+    }
+}   
+
 
 export const createEquipo = async (data: any) => {
     try {
