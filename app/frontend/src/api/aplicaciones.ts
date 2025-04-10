@@ -1,5 +1,5 @@
 import clienteAxios from "@/config/axios";
-
+import axios from "axios";
 
 export const update = async (data: any, id: string) => {
     try {
@@ -13,7 +13,7 @@ export const update = async (data: any, id: string) => {
 
 export const updateApp = async (data: any, id: string) => {
     try {
-        const res = await clienteAxios.put(`/update-app/${id}`, data)
+        const res = await axios.put(`${import.meta.env.VITE_SCAN}/equipos/${id}/aplicaciones`, data, { withCredentials: true })
         return res.data;
     } catch (error: any) {
         console.log("Error en la actualizacion de equipos: ", error);

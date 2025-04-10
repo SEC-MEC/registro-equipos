@@ -19,3 +19,4 @@ export const getScanByIdRequest = async(ipStart?: string, ipEnd?: string) => {
         console.log(error)
     }
 }
+
