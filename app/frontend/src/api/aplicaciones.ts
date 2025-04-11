@@ -11,7 +11,7 @@ export const update = async (data: any, id: string) => {
     }
 }
 
-export const updateApp = async (data: any, id: string) => {
+export const updateApp = async (data: { id_app: number[] }, id: string) => {
     try {
         const res = await axios.put(`${import.meta.env.VITE_SCAN}/equipos/${id}/aplicaciones`, data, { withCredentials: true })
         return res.data;

@@ -103,13 +103,16 @@ const ItemProfile = () => {
     }
 
 
-  const handleUpdateApp = () => {
-    const dataJson = {
-        id_app: selectedAplicaciones.map(app => ({ id: app.id }))
+
+    const handleUpdateApp = () => {
+
+      const aplicacionesIds = selectedAplicaciones.map(app => parseInt(app.id));
+      const dataJson = {
+        id_app: aplicacionesIds
+      };
+
+      appMutation.mutate(dataJson);
     };
-    appMutation.mutate(dataJson);
- 
-};
 
   const handleCheckboxChange = (aplicacionId: string) => {
     setSelectedAplicaciones(prev => {

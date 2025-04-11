@@ -24,7 +24,7 @@ const Navbar = ({ className }: NavbarProps) => {
   const logOut = useAuthStore((state) => state.logout)
   const profile = useAuthStore((state) => state.profile)
   const userRol = profile.data.es_admin
-  console.log(userRol)
+
 
   useEffect(() => {
     const handleScroll = () => {
