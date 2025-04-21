@@ -3,13 +3,13 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-"scripts": {
-  "dev": "vite --host",
-  "build": "tsc -b && vite build",
-  "lint": "eslint .",
-  "preview": "vite preview --host",
-  "start": "vite --port 5001 --host"
-},
+  "scripts": {
+    "dev": "vite --host",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview --host",
+    "start": "vite --port 5001 --host"
+  },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
     "@nextui-org/react": "^2.4.8",
@@ -21,6 +21,7 @@
     "@radix-ui/react-scroll-area": "^1.2.0",
     "@radix-ui/react-select": "^2.1.2",
     "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-tabs": "^1.1.8",
     "@tanstack/react-query": "^5.59.19",
     "axios": "^1.7.7",
     "class-variance-authority": "^0.7.0",

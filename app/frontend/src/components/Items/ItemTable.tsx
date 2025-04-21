@@ -13,11 +13,8 @@ import { useAuthStore } from '@/context/store'
 import UpdateDialog from '../dialog/UpdateDialog'
 import { toast } from 'sonner'
 import { DeleteConfirmDialog } from '../dialog/DeleteConfirmDialog'
-
 import { getAllScanRequest } from '@/api/scan'
-
-
-
+import ItemOficina from './ItemOficina'
 
 interface Item {
   id: number;
@@ -132,11 +129,11 @@ const ItemTable =  () => {
     <div className="p-4 md:p-8 min-h-screen">
   
 
-    
+  
 
    
       <div className="max-w-7xl mx-auto space-y-3 ">
-    
+      
         <div className="relative mt-16">
           <Input
             type="text"
@@ -147,7 +144,7 @@ const ItemTable =  () => {
           />
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400" size={20} />
         </div>
-
+<ItemOficina/>
         <div className="dark:bg-zinc-900 dark:bg-opacity-60  backdrop-blur-3xl shadow-lg shadow-zinc-800 dark:shadow-sky-800 dark:backdrop-blur-3xl rounded-xl  overflow-hidden">
           <div className="overflow-x-auto">
             <Table className=' '>
