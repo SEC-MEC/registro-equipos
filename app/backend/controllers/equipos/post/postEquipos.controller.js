@@ -155,19 +155,6 @@ export const getInfoEquipo = async (req, res) => {
         const systemInfo = await si.system();
         const serialNumber = systemInfo.serial;
 
-        // const exisPcName = await prisma.equipo.findFirst({
-        //     where: { nombre: pcName },
-        // });
-        // if(exisPcName){
-        //     return res.status(400).json({ info: "El nombre de equipo ya existe" });
-        // }
-        // const exisSerialNumber = await prisma.equipo.findFirst({
-        //     where: { nro_serie: serialNumber },
-        // });
-        // if(exisSerialNumber){
-        //     return res.json({ info: "El número de serie ya existe" });
-        // }
-      
         const result = await prisma.equipo.create({
             data:{
                 nombre: pcName,

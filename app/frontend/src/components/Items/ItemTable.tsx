@@ -8,9 +8,8 @@ import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search } from '
 import { deleteEquipo } from '@/api/equipos'
 import {  useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
-import { downloadPDF, generatePDF } from '@/utils/generatePDF'
+
 import { useAuthStore } from '@/context/store'
-import { Download } from 'lucide-react';
 import UpdateDialog from '../dialog/UpdateDialog'
 import { toast } from 'sonner'
 import { DeleteConfirmDialog } from '../dialog/DeleteConfirmDialog'
@@ -112,19 +111,19 @@ const ItemTable =  () => {
   }
 
 
-  const handleGeneratePDF = async (equipo: any) => {
-    try {
-      const equipoPDF = {
-        ...equipo,
-        last_update: equipo.last_update ? new Date(equipo.last_update).toISOString() : null,
-        aplicaciones: equipo.aplicaciones || [],
-      };
-      const pdfBytes = await generatePDF(equipoPDF as any);
-      downloadPDF(pdfBytes, `Equipo_${equipo.nombre_pc}.pdf`);
-    } catch (error) {
-      console.error('Error al generar el PDF:', error);
-    }
-  };
+  // const handleGeneratePDF = async (equipo: any) => {
+  //   try {
+  //     const equipoPDF = {
+  //       ...equipo,
+  //       last_update: equipo.last_update ? new Date(equipo.last_update).toISOString() : null,
+  //       aplicaciones: equipo.aplicaciones || [],
+  //     };
+  //     const pdfBytes = await generatePDF(equipoPDF as any);
+  //     downloadPDF(pdfBytes, `Equipo_${equipo.nombre}.pdf`);
+  //   } catch (error) {
+  //     console.error('Error al generar el PDF:', error);
+  //   }
+  // };
 
 
   return (
@@ -158,7 +157,6 @@ const ItemTable =  () => {
                   <TableHead className="  dark:text-white">Nombre PC</TableHead>
                   <TableHead className="  dark:text-white">Piso</TableHead>
                   <TableHead className="  dark:text-white">App instaladas</TableHead>
-                  <TableHead className="  dark:text-white">Exportar PDF</TableHead>
                   { isAdmin && <TableHead className="  dark:text-white">Editar/Eliminar</TableHead >}
                 </TableRow>
               </TableHeader>
@@ -183,9 +181,6 @@ const ItemTable =  () => {
                       <TableCell>{item.piso}</TableCell>
                       <TableCell>
                         <Link to={`/aplicaciones/${item.id}`} className="text-blue-500 hover:underline font-semibold">Ver Apps</Link>
-                        </TableCell>
-                        <TableCell>
-                          <Button onClick={() => handleGeneratePDF(item)}><Download/></Button>
                         </TableCell>
                     <TableCell>
                       {

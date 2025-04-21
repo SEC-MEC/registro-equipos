@@ -4,7 +4,7 @@ import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 
 interface EquipoPDF {
     id_equipo: number;
-    nombre_pc: string;
+    nombre: string;
     nro_serie: string;
     id_inventario: string | null;
     tipo: string;
@@ -63,10 +63,7 @@ export async function generatePDF(equipo: EquipoPDF) {
   const fechaFormateada = equipo.last_update ? format(new Date(equipo.last_update), 'yyyy-MM-dd') : 'N/A';
 
   const data = [
-    ["Nombre del PC", equipo.nombre_pc],
-    ["Número de Serie", equipo.nro_serie],
-    ["Unidad", equipo.UE],
-    ["Tecnico asignado", equipo.Tecnico],
+    ["Nombre del PC", equipo.nombre],
     ["Fecha", fechaFormateada],
   ];
 
