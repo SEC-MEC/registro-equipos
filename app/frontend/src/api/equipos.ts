@@ -1,6 +1,7 @@
 
 import { UpdateEquipoData } from "@/interface/Equipo";
 import clienteAxios from "../config/axios";
+import axios from "axios";
 
 
 
@@ -74,21 +75,21 @@ export const getOficinas = async () => {
 
 export const getAplicacionesById = async (id: string) => {
     try {
-        const res = await clienteAxios.get(`/aplicaciones/${id}`)
+        const res = await axios.get(`${import.meta.env.VITE_SCAN}/aplicaciones/${id}`)
         return res.data
     } catch (error) {
         console.log("Error en la obtencion de aplicaciones: ", error)
     }
 }
 
-export const getAplicaciones = async () => {
-    try {
-        const res = await clienteAxios.get(`/aplicaciones`)
-        return res.data
-    } catch (error) {
-        console.log("Error en la obtencion de aplicaciones: ", error)
-    }
-}
+// export const getAplicaciones = async () => {
+//     try {
+//         const res = await clienteAxios.get(`/aplicaciones`)
+//         return res.data
+//     } catch (error) {
+//         console.log("Error en la obtencion de aplicaciones: ", error)
+//     }
+// }
 
 
 export const updateEquipo = async (id: number, data: UpdateEquipoData) => {

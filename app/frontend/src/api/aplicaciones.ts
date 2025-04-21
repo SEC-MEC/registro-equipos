@@ -30,3 +30,12 @@ export const deleteApp = async ( id: string, id_app: string) => {
         throw error.response ? error.response.data : new Error("Error en la actualizacion de equipos");
     }
 }
+
+export const getAplicaciones = async () => {
+    try {
+        const res = await axios.get(`${import.meta.env.VITE_SCAN}/aplicaciones`)
+        return res.data
+    } catch (error) {
+        console.log("Error en la obtencion de aplicaciones: ", error)
+    }
+}

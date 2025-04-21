@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { createEquipo, generateEquipoName, getAplicaciones, getOficinas } from '@/api/equipos'
+import { createEquipo, generateEquipoName, getOficinas } from '@/api/equipos'
 import { Card, CardTitle, CardHeader, CardContent, CardFooter } from '../ui/card'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Label } from '../ui/label'
@@ -12,6 +12,7 @@ import { Button } from '../ui/button'
 import { Textarea } from '../ui/textarea'
 import { toast } from "sonner"
 import { useAuthStore } from '@/context/store'
+import { getAplicaciones } from '@/api/aplicaciones'
 
 import { HardDrive, Loader2, MonitorCheck } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert'
