@@ -12,7 +12,6 @@ services:
     restart: always
     volumes:
       - ./backend:/app
-      - /app/node_modules
 
   frontend:
     build:
@@ -27,4 +26,3 @@ services:
       - backend
     volumes:
       - ./frontend:/app
-      - /app/node_modules
