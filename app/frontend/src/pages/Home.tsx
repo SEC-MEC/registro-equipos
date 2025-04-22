@@ -1,26 +1,43 @@
-
-import DarkMode from "@/components/DarkMode";
 import LoginForm from "../components/LoginForm"
 
-
+const backgroundStyle = `
+  .bg-pattern {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .content {
+    position: relative;
+    z-index: 2;
+  }`
 
 const Home = () => {
   return (
-        
-      <div>
 
-      
-           <DarkMode/>
-      
+    <main
+    className="min-h-screen flex items-center justify-center"
+    style={{
+      background: "radial-gradient(circle at center, #1E40AF, #000000)",
+    }}
+  >
+    <style>
+      {backgroundStyle}
+    </style>
+    <div className="bg-pattern"></div>
+    <div className="content w-full">
+       <LoginForm/>
+    </div>
+  
+  </main>
         
-           <div className="relative z-10 w-full max-w-2xl mx-auto p-4 pt-32 flex flex-col items-center">
-        <h1 className="text-3xl md:text-7xl bg-clip-text text-transparent bg-gradient-to-b from-sky-500 via-sky-600 to-sky-900 text-center font-sans font-bold mb-6">
-          Inventario MEC
-        </h1>
-     
-        <LoginForm/>
-      </div>
-</div>
      
    
 

@@ -2,7 +2,24 @@ import { ReactNode } from "react"
 import Navbar from "./Navbar"
 import DarkMode from "./DarkMode"
 
-
+const backgroundStyle = `
+  .bg-pattern {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .content {
+    position: relative;
+    z-index: 2;
+  }`
 
 interface LayoutProps {
   children: ReactNode
@@ -10,7 +27,16 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
   return (
-    <div className="flex min-h-screen bg-white dark:bg-slate-900 bg-[url('https://tailwindui.com/plus/img/beams-home@95.jpg')]  dark:bg-[url('https://tailwindcss.com/_next/static/media/hero-dark@90.dba36cdf.jpg')]  bg-fixed bg-cover bg-center">
+   
+    <main
+    className="min-h-screen flex items-center justify-center"
+    style={{
+      background: "radial-gradient(circle at center, #1E40AF, #000000)",
+    }}
+  >
+    <style>
+      {backgroundStyle}
+    </style>
 
   <Navbar />
         <span className='absolute right-24 top-4'>
@@ -23,7 +49,7 @@ const Layout = ({ children }: LayoutProps) => {
             {children}
  
         </main>
- </div>
+   </main>
       
         
 

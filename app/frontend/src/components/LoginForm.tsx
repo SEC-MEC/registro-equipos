@@ -48,8 +48,8 @@ const LoginForm = () => {
      <div className="w-full max-w-md mx-auto">
       <div className="rounded-xl shadow-2xl overflow-hidden">
         <div className=" p-8">
-          <h1 className="text-center font-bold text-3xl mb-2 dark:text-white">Inicia sesión</h1>
-          <p className="text-center dark:text-white">Ingresa tus credenciales para acceder</p>
+          <h1 className="text-center font-bold text-3xl mb-2 text-white">Inventario MEC</h1>
+          <p className="text-center text-white">Ingresa tus credenciales para acceder</p>
         </div>
         <form onSubmit={handleSubmit} className="p-8 space-y-6  bg-white dark:bg-transparent">
           <div className="space-y-2">

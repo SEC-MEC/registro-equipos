@@ -15,6 +15,7 @@ import { toast } from 'sonner'
 import { DeleteConfirmDialog } from '../dialog/DeleteConfirmDialog'
 import { getAllScanRequest } from '@/api/scan'
 import ItemOficina from './ItemOficina'
+import Layout from '../Layout'
 
 interface Item {
   id: number;
@@ -125,12 +126,10 @@ const ItemTable =  () => {
 
   return (
 
-   
+   <Layout>
+
+
     <div className="p-4 md:p-8 min-h-screen">
-  
-
-  
-
    
       <div className="max-w-7xl mx-auto space-y-3 ">
       
@@ -145,7 +144,7 @@ const ItemTable =  () => {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400" size={20} />
         </div>
 <ItemOficina/>
-        <div className="dark:bg-zinc-900 dark:bg-opacity-60  backdrop-blur-3xl shadow-lg shadow-zinc-800 dark:shadow-sky-800 dark:backdrop-blur-3xl rounded-xl  overflow-hidden">
+        <div className="bg-gray-900 bg-opacity-60 text-white rounded-xl  overflow-hidden">
           <div className="overflow-x-auto">
             <Table className=' '>
               
@@ -173,7 +172,7 @@ const ItemTable =  () => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.2 }}
-                      className="hover:bg-zinc-50  dark:hover:text-black transition-colors">
+                      className="hover:bg-zinc-50 hover:text-black  dark:hover:text-black transition-colors">
                       <TableCell className="font-medium">{item.nombre}</TableCell> 
                       <TableCell>{item.piso}</TableCell>
                       <TableCell>
@@ -225,7 +224,7 @@ const ItemTable =  () => {
               value={currentPage.toString()}
               onValueChange={(value) => goToPage(parseInt(value))}
             >
-              <SelectTrigger className="w-[100px]">
+              <SelectTrigger className="w-[100px] text-white">
                 <SelectValue placeholder="Página" />
               </SelectTrigger>
               <SelectContent>
@@ -254,7 +253,7 @@ const ItemTable =  () => {
             </Button>
           </div>
           <div className="flex items-center space-x-2">
-            <span className="text-sm text-zinc-600 dark:text-white">Elementos por página:</span>
+            <span className="text-sm text-white dark:text-white ">Elementos por página:</span>
             <Select
               value={itemsPerPage.toString()}
               onValueChange={(value) => {
@@ -262,12 +261,12 @@ const ItemTable =  () => {
                 setCurrentPage(1)
               }}
             >
-              <SelectTrigger className="w-[70px]">
+              <SelectTrigger className="w-[70px] text-white">
                 <SelectValue placeholder="10" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent >
                 {[10, 20, 50, 100].map((value) => (
-                  <SelectItem key={value} value={value.toString()}>
+                  <SelectItem  key={value} value={value.toString()}>
                     {value}
                   </SelectItem>
                 ))}
@@ -280,7 +279,7 @@ const ItemTable =  () => {
       </div> 
     
     </div>
-    
+       </Layout>
   )
 }
 
